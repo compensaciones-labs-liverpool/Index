@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Solicitud de Programas de Incentivos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      :root {
+        --color-fondo-pagina: #f4f6f9;
+        --color-contenedor: #ffffff;
+        --color-encabezados: #2c3e50;
+        --color-boton-principal: #4285f4;
+        --color-boton-principal-hover: #75236c;
+        --color-header-tabla: #404040;
+        --color-texto-header-tabla: #ffffff;
+        --color-botones-secundarios: #4285f4;
+      }
+
+      body { 
+        background-color: var(--color-fondo-pagina); 
+        padding: 30px; 
+        font-family: 'Segoe UI', system-ui, sans-serif; 
+      }
+      .form-container { 
+        background: var(--color-contenedor); 
+        padding: 40px; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+        max-width: 950px; 
+        margin: 0 auto; 
+      }
+      .step-title { 
+        border-bottom: 2px solid var(--color-encabezados); 
+        padding-bottom: 8px; 
+        margin-bottom: 25px; 
+        color: var(--color-encabezados); 
+        font-weight: 600; 
+      }
+      .btn-custom { 
+        background-color: var(--color-boton-principal); 
+        color: white; 
+      }
+      .btn-custom:hover { 
+        background-color: var(--color-boton-principal-hover); 
+        color: white; 
+      }
+      .tabla-header-personalizado {
+        background-color: var(--color-header-tabla) !important;
+        color: var(--color-texto-header-tabla) !important;
+      }
+
+      /* Contenedor con scroll para la tabla de almacenes */
+      .tabla-scroll-container {
+        max-height: 380px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+      }
+      .tabla-scroll-container thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .fila-seleccionada {
+        background-color: #e8f0fe !important;
+      }
+
+      .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo-container img {
+        max-height: 40px;
+        width: auto;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="form-container">
+      
+      <div class="logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/El_Puerto_de_Liverpool_%28group%29_logo.png" alt="El Puerto de Liverpool">
+      </div>
+
+      <h2 class="text-center mb-5" style="color: var(--color-encabezados); font-weight: bold;">Liverpool: Formato de Solicitud de Incentivos</h2>
+      
+      <form id="incentivosForm">
+        
+        <!-- Sección 1 -->
+        <div class="mb-5">
+          <h4 class="step-title">1. Datos del Solicitante y Programa</h4>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label font-weight-bold">Nombre del Vendedor (Solicitante)</label>
+              <input type="text" class="form-control" placeholder="James Webb" id="nombreVendedor" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Correo Electrónico (Solicitante)</label>
+              <input type="email" class="form-control" placeholder="james_webb@liverpool.com.mx" id="email" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Nombre del Programa de Incentivos</label>
+              <input type="text" class="form-control" placeholder="Apolo" id="nombrePrograma" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Fecha de Inicio del Programa</label>
+              <input type="date" class="form-control" id="fechaInicio" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Fecha de Fin del Programa</label>
+              <input type="date" class="form-control" id="fechaFin" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 2 -->
+        <div class="mb-5">
+          <h4 class="step-title">2. Clasificación y Proveedor</h4>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Origen del Proveedor</label>
+              <select class="form-select" id="origenProveedor">
+                <option value="Nacional">Nacional</option>
+                <option value="Extranjero">Extranjero</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Número de Proveedor</label>
+              <input type="text" class="form-control" id="numProveedor" required>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Nombre del Proveedor</label>
+              <input type="text" class="form-control" id="nomProveedor" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nombre de Contacto (Proveedor)</label>
+              <input type="text" class="form-control" id="nomContactoProv" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Correo Electrónico (Proveedor)</label>
+              <input type="email" class="form-control" id="correoContactoProv" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Número de Marca</label>
+              <input type="text" class="form-control" id="numMarca" required>
+            </div>
+            <div class="col-md-9">
+              <label class="form-label">Nombre de la Marca Participante</label>
+              <input type="text" class="form-control" id="nomMarca" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Número de Sección</label>
+              <input type="text" class="form-control" id="numSeccion" required>
+            </div>
+            <div class="col-md-9">
+              <label class="form-label">Nombre de la Sección</label>
+              <input type="text" class="form-control" id="nomSeccion" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 3 -->
+        <div class="mb-5">
+          <h4 class="step-title">3. Logística, Presupuesto y Mecánica</h4>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Público Dirigido</label>
+              <select class="form-select" id="publicoDirigido">
+                <option value="Vendedores">Vendedores</option>
+                <option value="Jefes de Departamento">Jefes de Departamento</option>
+                <option value="Ambos (Vendedores y Jefes)">Ambos (Vendedores y Jefes)</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha de Envío de los Premios</label>
+              <input type="date" class="form-control" id="fechaEnvioPremios" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Centro de Costes</label>
+              <input type="text" class="form-control" id="centroCostes" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tipo de Incentivo</label>
+              <select class="form-select" id="tipoIncentivo">
+                <option value="Especie">Especie</option>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Vale Incentivo">Vale Incentivo</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Valor Aproximado de los Premios ($MXN)</label>
+              <input type="number" class="form-control" id="valorPremios" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Objetivo del Programa</label>
+              <textarea class="form-control" placeholder="Incrementar las ventas de máquinas Apolo" id="objetivo" rows="2" required></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Mecánica del Programa (Descripción detallada)</label>
+              <textarea class="form-control" id="mecanica" rows="3" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 4 -->
+        <div class="mb-5">
+          <h4 class="step-title">4. SKUs Participantes</h4>
+          <div id="skuContainer" class="row g-2 mb-2">
+            <div class="col-md-4 input-group mb-1">
+              <input type="text" class="form-control sku-input" placeholder="Código SKU" required>
+              <button class="btn btn-outline-danger" type="button" onclick="eliminarFilaSku(this)">X</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary w-10" onclick="agregarFilaSku()">+ Agregar otro SKU</button>
+        </div>
+
+        <!-- SECCIÓN 5: TABLA INTERACTIVA DE ALMACENES Y METAS -->
+        <div class="mb-5">
+          <h4 class="step-title">5. Almacenes Seleccionados y Metas</h4>
+          <p class="text-muted small">Filtra la lista de tiendas, marca la casilla correspondiente para seleccionarla e ingresa su meta ($MXN).</p>
+          
+          <div class="row g-2 align-items-center mb-3">
+            <div class="col-md-8">
+              <input type="text" class="form-control" id="filtroTablaAlmacenes" placeholder="Filtrar tiendas por número o nombre" onkeyup="filtrarAlmacenes()">
+            </div>
+            <div class="col-md-4 text-end">
+              <span class="badge bg-primary fs-6" id="contadorSeleccionados">0 tiendas seleccionadas</span>
+            </div>
+          </div>
+
+          <div class="tabla-scroll-container">
+            <table class="table table-hover align-middle mb-0" id="tablaAlmacenesCompleta">
+              <thead>
+                <tr>
+                  <th class="tabla-header-personalizado text-center" style="width: 70px;">
+                    <input type="checkbox" id="checkTodos" title="Seleccionar/Deseleccionar Visibles" onclick="toggleTodos(this)">
+                  </th>
+                  <th class="tabla-header-personalizado" style="width: 120px;">No. Almacén</th>
+                  <th class="tabla-header-personalizado">Nombre del Almacén</th>
+                  <th class="tabla-header-personalizado" style="width: 220px;">Meta ($MXN)</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyAlmacenesLista">
+                <!-- Se llena dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sección 6 -->
+        <div class="mb-5">
+          <h4 class="step-title">6. Cargar Imagen / Evidencia Fotográfica</h4>
+          <div class="col-12">
+            <label class="form-label">Seleccionar archivo de imagen (Opcional)</label>
+            <input type="file" class="form-control" id="archivoFoto" accept="image/*">
+            <div class="form-text">Formatos sugeridos: JPG, PNG, WEBP.</div>
+          </div>
+        </div>
+
+        <button type="button" id="btnEnviar" class="btn btn-custom w-100 p-3 fs-5" onclick="enviarDatos()">Enviar Solicitud Completa</button>
+      </form>
+    </div>
+
+    <script>
+      // webhook
+      const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/9i8toum62wetrwz9x298ttstqdqvax00";
+
+      const ALMACENES_DB = [
+        {num:"0001", nom:"Liverpool Centro"}, {num:"0002", nom:"Liverpool Insurgentes"}, {num:"0003", nom:"Liverpool Polanco"},
+        {num:"0005", nom:"Liverpool Perisur"}, {num:"0006", nom:"Liverpool Coapa"}, {num:"0007", nom:"Liverpool Santa Fe"},
+        {num:"0081", nom:"Liverpool Parque Delta"}, {num:"0087", nom:"Liverpool Tezontle"}, {num:"0103", nom:"Liverpool Interlomas"},
+        {num:"0176", nom:"Liverpool Mitikah"}, {num:"0456", nom:"Liverpool Antenas Iztapalapa"}, {num:"0004", nom:"Liverpool Satélite"},
+        {num:"0029", nom:"Liverpool Perinorte"}, {num:"0080", nom:"Liverpool Ecatepec"}, {num:"0083", nom:"Liverpool Lindavista"},
+        {num:"0104", nom:"Liverpool Atizapan"}, {num:"0170", nom:"Liverpool Ciudad Jardin"}, {num:"0180", nom:"Liverpool Coacalco"},
+        {num:"0186", nom:"Liverpool Tlalnepantla"}, {num:"0195", nom:"Liverpool Tecamac"}, {num:"0199", nom:"Liverpool Toreo"},
+        {num:"0766", nom:"Liverpool Tepeyac"}, {num:"0015", nom:"Liverpool Puebla Crystal"}, {num:"0027", nom:"Liverpool Acapulco Galerías"},
+        {num:"0048", nom:"Liverpool Pachuca"}, {num:"0072", nom:"Liverpool Puebla"}, {num:"0074", nom:"Liverpool Metepec"},
+        {num:"0077", nom:"Liverpool Cuernavaca"}, {num:"0106", nom:"Liverpool Puebla Serdán"}, {num:"0140", nom:"Liverpool Toluca"},
+        {num:"0177", nom:"Liverpool Tlaxcala"}, {num:"0192", nom:"Liverpool Cuautla"}, {num:"0300", nom:"Liverpool Tehuacán"},
+        {num:"0303", nom:"Liverpool Chilpancingo"}, {num:"0306", nom:"Liverpool Acapulco"}, {num:"0386", nom:"Liverpool Parque Puebla"},
+        {num:"0469", nom:"Liverpool Atlixco"}, {num:"0025", nom:"Liverpool Gran Plaza"}, {num:"0051", nom:"Liverpool Guadalajara Centro"},
+        {num:"0053", nom:"Liverpool Plaza Patria"}, {num:"0054", nom:"Liverpool Tepic Centro"}, {num:"0058", nom:"Liverpool Aguascalientes Villa"},
+        {num:"0062", nom:"Liverpool Vallarta"}, {num:"0064", nom:"Liverpool Zapopan"}, {num:"0070", nom:"Liverpool Tlaquepaque"},
+        {num:"0078", nom:"Liverpool Guadalajara"}, {num:"0084", nom:"Liverpool Colima"}, {num:"0086", nom:"Liverpool Aguascalientes"},
+        {num:"0088", nom:"Liverpool Tepic"}, {num:"0135", nom:"Liverpool Oblatos"}, {num:"0168", nom:"Liverpool Santa Anita"},
+        {num:"0178", nom:"Liverpool Zamora"}, {num:"0967", nom:"Liverpool La Perla"}, {num:"0010", nom:"Liverpool Xalapa Crystal"},
+        {num:"0011", nom:"Liverpool Córdoba Crystal"}, {num:"0016", nom:"Liverpool Coatzacoalcos Crysta"}, {num:"0017", nom:"Liverpool Poza Rica"},
+        {num:"0028", nom:"Liverpool Veracruz Mocambo"}, {num:"0037", nom:"Liverpool Oaxaca"}, {num:"0073", nom:"Liverpool Veracruz"},
+        {num:"0082", nom:"Liverpool Xalapa"}, {num:"0085", nom:"Liverpool Coatzacoalcos"}, {num:"0121", nom:"Liverpool Orizaba"},
+        {num:"0165", nom:"Liverpool Veracruz El Dorado"}, {num:"0169", nom:"Liverpool Tuxpan"}, {num:"0310", nom:"Liverpool Istmo"},
+        {num:"0463", nom:"Liverpool Oaxaca Plaza Bella"}, {num:"0022", nom:"Liverpool Monterrey Centro"}, {num:"0031", nom:"Liverpool Monterrey"},
+        {num:"0034", nom:"Liverpool Chihuahua Presidente"}, {num:"0041", nom:"Liverpool Tampico"}, {num:"0042", nom:"Liverpool Chihuahua"},
+        {num:"0043", nom:"Liverpool Torreón"}, {num:"0045", nom:"Liverpool Monterrey Valle"}, {num:"0065", nom:"Liverpool Saltillo"},
+        {num:"0113", nom:"Liverpool Monterrey Cumbres"}, {num:"0126", nom:"Liverpool Ciudad Victoria"}, {num:"0175", nom:"Liverpool Tampico Altama"},
+        {num:"0189", nom:"Liverpool Monterrey la Fe"}, {num:"0457", nom:"Liverpool Monterrey Esfera"}, {num:"0468", nom:"Liverpool Monclova"},
+        {num:"0036", nom:"Liverpool San Luis P el Dorado"}, {num:"0044", nom:"Liverpool Querétaro"}, {num:"0047", nom:"Liverpool Irapuato"},
+        {num:"0057", nom:"Liverpool Morelia"}, {num:"0061", nom:"Liverpool Morelia Paseo"}, {num:"0071", nom:"Liverpool León"},
+        {num:"0105", nom:"Liverpool Celaya"}, {num:"0136", nom:"Liverpool San Luis Potosí"}, {num:"0166", nom:"Liverpool León Sur"},
+        {num:"0173", nom:"Liverpool Queretaro Antea"}, {num:"0194", nom:"Liverpool Salamanca"}, {num:"0302", nom:"Liverpool Sn Miguel de Allende"},
+        {num:"0311", nom:"Liverpool San Juan del Rio"}, {num:"0454", nom:"Liverpool Guanajuato"}, {num:"0455", nom:"Liverpool Paseo Queretaro"},
+        {num:"0046", nom:"Liverpool Culiacán"}, {num:"0050", nom:"Liverpool Hermosillo"}, {num:"0055", nom:"Liverpool Mazatlán Centro"},
+        {num:"0060", nom:"Liverpool Ciudad Obregón"}, {num:"0089", nom:"Liverpool Durango"}, {num:"0110", nom:"Liverpool Ciudad Juarez"},
+        {num:"0117", nom:"Liverpool Mazatlán"}, {num:"0127", nom:"Liverpool Zacatecas"}, {num:"0305", nom:"Liverpool Los Mochis"},
+        {num:"0308", nom:"Liverpool La Paz"}, {num:"0312", nom:"Liverpool Mexicali"}, {num:"0387", nom:"Liverpool Hermosillo Galerías"},
+        {num:"0471", nom:"Liverpool Fresnillo"}, {num:"0688", nom:"Liverpool Tijuana"}, {num:"1109", nom:"Liverpool Río Grande"},
+        {num:"0012", nom:"Villahermosa Crystal"}, {num:"0014", nom:"Liverpool Tuxtla"}, {num:"0019", nom:"Liverpool Tapachula"},
+        {num:"0021", nom:"Liverpool Villahermosa"}, {num:"0075", nom:"Liverpool Cancún"}, {num:"0076", nom:"Liverpool Mérida"},
+        {num:"0079", nom:"Liverpool Chetumal"}, {num:"0102", nom:"Liverpool Campeche"}, {num:"0134", nom:"Liverpool Vhmosa. Altabrisa"},
+        {num:"0191", nom:"Liverpool Tuxtla Oriente"}, {num:"0304", nom:"Liverpool Ciudad del Carmen"}, {num:"0307", nom:"Liverpool Playa del Carmen"},
+        {num:"0458", nom:"Liverpool Mérida Cabo Norte"}, {num:"0472", nom:"Liverpool Comitan"}
+      ];
+
+      window.onload = function() {
+        renderizarTablaAlmacenes();
+      };
+
+      function renderizarTablaAlmacenes() {
+        const tbody = document.getElementById('tbodyAlmacenesLista');
+        tbody.innerHTML = "";
+
+        ALMACENES_DB.forEach(a => {
+          let tr = document.createElement('tr');
+          tr.id = `fila_alm_${a.num}`;
+          tr.innerHTML = `
+            <td class="text-center">
+              <input type="checkbox" class="form-check-input check-almacen" value="${a.num}" onchange="cambioSeleccion('${a.num}')">
+            </td>
+            <td><strong>${a.num}</strong></td>
+            <td>${a.nom}</td>
+            <td>
+              <input type="number" class="form-control form-control-sm meta-input" id="meta_${a.num}" placeholder="Meta en $" disabled>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function cambioSeleccion(num) {
+        const check = document.querySelector(`.check-almacen[value="${num}"]`);
+        const inputMeta = document.getElementById(`meta_${num}`);
+        const fila = document.getElementById(`fila_alm_${num}`);
+
+        if (check.checked) {
+          inputMeta.disabled = false;
+          inputMeta.required = true;
+          fila.classList.add('fila-seleccionada');
+          inputMeta.focus();
+        } else {
+          inputMeta.disabled = true;
+          inputMeta.required = false;
+          inputMeta.value = "";
+          fila.classList.remove('fila-seleccionada');
+        }
+        actualizarContador();
+      }
+
+      function filtrarAlmacenes() {
+        const texto = document.getElementById('filtroTablaAlmacenes').value.toLowerCase();
+        const filas = document.querySelectorAll('#tbodyAlmacenesLista tr');
+
+        filas.forEach(f => {
+          const contenido = f.innerText.toLowerCase();
+          f.style.display = contenido.includes(texto) ? "" : "none";
+        });
+      }
+
+      function toggleTodos(masterCheck) {
+        const filas = document.querySelectorAll('#tbodyAlmacenesLista tr');
+        filas.forEach(f => {
+          if (f.style.display !== "none") {
+            const check = f.querySelector('.check-almacen');
+            if (check.checked !== masterCheck.checked) {
+              check.checked = masterCheck.checked;
+              cambioSeleccion(check.value);
+            }
+          }
+        });
+      }
+
+      function actualizarContador() {
+        const total = document.querySelectorAll('.check-almacen:checked').length;
+        document.getElementById('contadorSeleccionados').innerText = `${total} tienda(s) seleccionada(s)`;
+      }
+
+      function agregarFilaSku() {
+        const div = document.createElement('div');
+        div.className = 'col-md-4 input-group mb-1';
+        div.innerHTML = '<input type="text" class="form-control sku-input" placeholder="Código de SKU" required>' +
+                        '<button class="btn btn-outline-danger" type="button" onclick="eliminarFilaSku(this)">X</button>';
+        document.getElementById('skuContainer').appendChild(div);
+      }
+
+      function eliminarFilaSku(btn) {
+        if(document.querySelectorAll('.sku-input').length > 1) btn.parentElement.remove();
+      }
+
+      function obtenerAlmacenesSeleccionados() {
+        let metas = [];
+        let errorMetaVacia = false;
+
+        const checks = document.querySelectorAll('.check-almacen:checked');
+        checks.forEach(check => {
+          const num = check.value;
+          const almacenObj = ALMACENES_DB.find(a => a.num === num);
+          const metaValor = document.getElementById(`meta_${num}`).value;
+
+          if (!metaValor || parseFloat(metaValor) <= 0) {
+            errorMetaVacia = true;
+          }
+
+          metas.push({
+            numero: almacenObj.num,
+            nombre: almacenObj.nom,
+            meta: metaValor
+          });
+        });
+
+        return { metas, errorMetaVacia };
+      }
+
+      function enviarDatos() {
+        const form = document.getElementById('incentivosForm');
+        const { metas, errorMetaVacia } = obtenerAlmacenesSeleccionados();
+
+        if (metas.length === 0) {
+          alert("Debes seleccionar al menos una tienda de la lista y asignarle una meta.");
+          return;
+        }
+
+        if (errorMetaVacia) {
+          alert("Por favor ingresa una meta válida para todas las tiendas que has seleccionado.");
+          return;
+        }
+
+        if(!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const btn = document.getElementById('btnEnviar');
+        let skus = [];
+        document.querySelectorAll('.sku-input').forEach(i => { if(i.value.trim() !== "") skus.push(i.value.trim()); });
+
+        const fileInput = document.getElementById('archivoFoto');
+
+        function ejecutarProcesamiento(fotoData) {
+          btn.disabled = true;
+          btn.innerText = "Procesando y enviando solicitud...";
+
+          const dataPack = {
+            nombreVendedor: document.getElementById('nombreVendedor').value,
+            email: document.getElementById('email').value,
+            nombrePrograma: document.getElementById('nombrePrograma').value,
+            fechaInicio: document.getElementById('fechaInicio').value,
+            fechaFin: document.getElementById('fechaFin').value,
+            origenProveedor: document.getElementById('origenProveedor').value,
+            numProveedor: document.getElementById('numProveedor').value,
+            nomProveedor: document.getElementById('nomProveedor').value,
+            nomContactoProv: document.getElementById('nomContactoProv').value,
+            correoContactoProv: document.getElementById('correoContactoProv').value,
+            numMarca: document.getElementById('numMarca').value,
+            nomMarca: document.getElementById('nomMarca').value,
+            numSeccion: document.getElementById('numSeccion').value,
+            nomSeccion: document.getElementById('nomSeccion').value,
+            publicoDirigido: document.getElementById('publicoDirigido').value,
+            fechaEnvioPremios: document.getElementById('fechaEnvioPremios').value,
+            centroCostes: document.getElementById('centroCostes').value,
+            tipoIncentivo: document.getElementById('tipoIncentivo').value,
+            valorPremios: document.getElementById('valorPremios').value,
+            objetivo: document.getElementById('objetivo').value,
+            mecanica: document.getElementById('mecanica').value,
+            skus: skus,
+            metas: metas,
+            foto: fotoData
+          };
+
+          // Envío directo mediante FETCH a Make.com
+          fetch(MAKE_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataPack)
+          })
+          .then(response => {
+            btn.disabled = false;
+            btn.innerText = "Enviar Solicitud Completa";
+
+            if(response.ok) {
+              alert("Solicitud registrada con éxito.");
+              form.reset();
+              renderizarTablaAlmacenes();
+              actualizarContador();
+            } else {
+              alert("Ocurrió un error al procesar el envío.");
+            }
+          })
+          .catch(err => {
+            btn.disabled = false;
+            btn.innerText = "Enviar Solicitud Completa";
+            console.error(err);
+            alert("Error al conectar con el servidor: " + err);
+          });
+        }
+
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const reader = new FileReader();
+
+          btn.disabled = true;
+          btn.innerText = "Procesando archivo adjunto...";
+
+          reader.onload = function(e) {
+            const content = e.target.result.split(',')[1];
+            const fotoData = {
+              base64: content,
+              type: file.type,
+              name: file.name
+            };
+            ejecutarProcesamiento(fotoData);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          ejecutarProcesamiento(null);
+        }
+      }
+    </script>
+  </body>
+</html>
