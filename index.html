@@ -210,7 +210,7 @@
           <button type="button" class="btn btn-primary w-10" onclick="agregarFilaSku()">+ Agregar otro SKU</button>
         </div>
 
-        <!-- SECCIÓN 5: TABLA INTERACTIVA DE ALMACENES Y METAS -->
+        <!-- Sección 5: Tabla de almacenes y metas-->
         <div class="mb-5">
           <h4 class="step-title">5. Almacenes Seleccionados y Metas</h4>
           <p class="text-muted small">Filtra la lista de tiendas, marca la casilla correspondiente para seleccionarla e ingresa su meta ($MXN).</p>
@@ -427,85 +427,61 @@
         let skus = [];
         document.querySelectorAll('.sku-input').forEach(i => { if(i.value.trim() !== "") skus.push(i.value.trim()); });
 
-        const fileInput = document.getElementById('archivoFoto');
+        // Cambiar estado del botón
+        btn.disabled = true;
+        btn.innerText = "Procesando y enviando solicitud...";
 
-        function ejecutarProcesamiento(fotoData) {
-          btn.disabled = true;
-          btn.innerText = "Procesando y enviando solicitud...";
+        const dataPack = {
+          nombreVendedor: document.getElementById('nombreVendedor').value,
+          email: document.getElementById('email').value,
+          nombrePrograma: document.getElementById('nombrePrograma').value,
+          fechaInicio: document.getElementById('fechaInicio').value,
+          fechaFin: document.getElementById('fechaFin').value,
+          origenProveedor: document.getElementById('origenProveedor').value,
+          numProveedor: document.getElementById('numProveedor').value,
+          nomProveedor: document.getElementById('nomProveedor').value,
+          numMarca: document.getElementById('numMarca').value,
+          nomMarca: document.getElementById('nomMarca').value,
+          numSeccion: document.getElementById('numSeccion').value,
+          nomSeccion: document.getElementById('nomSeccion').value,
+          publicoDirigido: document.getElementById('publicoDirigido').value,
+          fechaEnvioPremios: document.getElementById('fechaEnvioPremios').value,
+          centroCostes: document.getElementById('centroCostes').value,
+          tipoIncentivo: document.getElementById('tipoIncentivo').value,
+          valorPremios: document.getElementById('valorPremios').value,
+          objetivo: document.getElementById('objetivo').value,
+          mecanica: document.getElementById('mecanica').value,
+          skus: skus,
+          metas: metas
+        };
 
-          const dataPack = {
-            nombreVendedor: document.getElementById('nombreVendedor').value,
-            email: document.getElementById('email').value,
-            nombrePrograma: document.getElementById('nombrePrograma').value,
-            fechaInicio: document.getElementById('fechaInicio').value,
-            fechaFin: document.getElementById('fechaFin').value,
-            origenProveedor: document.getElementById('origenProveedor').value,
-            numProveedor: document.getElementById('numProveedor').value,
-            nomProveedor: document.getElementById('nomProveedor').value,
-            numMarca: document.getElementById('numMarca').value,
-            nomMarca: document.getElementById('nomMarca').value,
-            numSeccion: document.getElementById('numSeccion').value,
-            nomSeccion: document.getElementById('nomSeccion').value,
-            publicoDirigido: document.getElementById('publicoDirigido').value,
-            fechaEnvioPremios: document.getElementById('fechaEnvioPremios').value,
-            centroCostes: document.getElementById('centroCostes').value,
-            tipoIncentivo: document.getElementById('tipoIncentivo').value,
-            valorPremios: document.getElementById('valorPremios').value,
-            objetivo: document.getElementById('objetivo').value,
-            mecanica: document.getElementById('mecanica').value,
-            skus: skus,
-            metas: metas
-          };
+        // Envío directo mediante FETCH a Make.com
+        fetch(MAKE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataPack)
+        })
+        .then(response => {
+          btn.disabled = false;
+          btn.innerText = "Enviar Solicitud Completa";
 
-          // Envío directo mediante FETCH a Make.com
-          fetch(MAKE_WEBHOOK_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataPack)
-          })
-          .then(response => {
-            btn.disabled = false;
-            btn.innerText = "Enviar Solicitud Completa";
-
-            if(response.ok) {
-              alert("Solicitud registrada con éxito.");
-              form.reset();
-              renderizarTablaAlmacenes();
-              actualizarContador();
-            } else {
-              alert("Ocurrió un error al procesar el envío.");
-            }
-          })
-          .catch(err => {
-            btn.disabled = false;
-            btn.innerText = "Enviar Solicitud Completa";
-            console.error(err);
-            alert("Error al conectar con el servidor: " + err);
-          });
-        }
-
-        if (fileInput.files.length > 0) {
-          const file = fileInput.files[0];
-          const reader = new FileReader();
-
-          btn.disabled = true;
-          btn.innerText = "Procesando archivo adjunto...";
-
-          reader.onload = function(e) {
-            const content = e.target.result.split(',')[1];
-            const fotoData = {
-              base64: content,
-              type: file.type,
-              name: file.name
-            };
-            ejecutarProcesamiento(fotoData);
-          };
-          reader.readAsDataURL(file);
-        } else {
-          ejecutarProcesamiento(null);
-        }
+          if(response.ok) {
+            alert("Solicitud registrada con éxito.");
+            form.reset();
+            renderizarTablaAlmacenes();
+            actualizarContador();
+          } else {
+            alert("Ocurrió un error al procesar el envío.");
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerText = "Enviar Solicitud Completa";
+          console.error(err);
+          alert("Error al conectar con el servidor: " + err);
+        });
       }
     </script>
   </body>
