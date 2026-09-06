@@ -243,16 +243,6 @@
           </div>
         </div>
 
-        <!-- Sección 6 -->
-        <div class="mb-5">
-          <h4 class="step-title">6. Cargar Imagen / Evidencia Fotográfica</h4>
-          <div class="col-12">
-            <label class="form-label">Seleccionar archivo de imagen (Opcional)</label>
-            <input type="file" class="form-control" id="archivoFoto" accept="image/*">
-            <div class="form-text">Formatos sugeridos: JPG, PNG, WEBP.</div>
-          </div>
-        </div>
-
         <button type="button" id="btnEnviar" class="btn btn-custom w-100 p-3 fs-5" onclick="enviarDatos()">Enviar Solicitud Completa</button>
       </form>
     </div>
@@ -464,8 +454,7 @@
             objetivo: document.getElementById('objetivo').value,
             mecanica: document.getElementById('mecanica').value,
             skus: skus,
-            metas: metas,
-            foto: fotoData
+            metas: metas
           };
 
           // Envío directo mediante FETCH a Make.com
