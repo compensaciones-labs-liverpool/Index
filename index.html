@@ -585,7 +585,6 @@
           meta: el.value || "0"
         });
       });
-
       // Payload JSON completo
       const payload = {
         idSolicitud: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36),
@@ -604,6 +603,7 @@
         nombreSeccion: document.getElementById("nomSeccion").value,
         nombreComprador: document.getElementById("nombreComprador").value,
         emailComprador: document.getElementById("emailComprador").value,
+        tipoPrograma: document.getElementById("tipoPrograma").value,
         publicoDirigido: document.getElementById("publicoDirigido").value,
         fechaEnvioPremios: document.getElementById("fechaEnvioPremios").value || "",
         centroCostes: document.getElementById("centroCostes").value,
