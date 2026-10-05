@@ -526,6 +526,13 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       cargarTablaAlmacenes();
+      // Bloquear el envío del formulario al presionar 'Enter'
+      document.getElementById("incentivosForm").addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") {
+          e.preventDefault();
+          return false;
+        }
+      });
     });
 
     function cargarTablaAlmacenes() {
