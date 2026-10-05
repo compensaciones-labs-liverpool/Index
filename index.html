@@ -564,87 +564,105 @@
     }
 
     document.getElementById("incentivosForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      const btnEnviar = document.getElementById("btnEnviar");
-      btnEnviar.disabled = true;
-      btnEnviar.innerText = "Enviando Solicitud...";
+  const btnEnviar = document.getElementById("btnEnviar");
+  btnEnviar.disabled = true;
+  btnEnviar.innerText = "Enviando Solicitud...";
 
-      // Recopilar SKUs
-      const skus = [];
-      document.querySelectorAll("#tablaSkus .sku-val").forEach(el => {
-        skus.push(el.innerText.trim());
+  // 1. Recopilar SKUs
+  const skus = [];
+  document.querySelectorAll("#tablaSkus .sku-val").forEach(el => {
+    skus.push(el.innerText.trim());
+  });
+
+  // 2. Recopilar Almacenes y Metas (Filtra solo los que tienen meta > 0)
+  const almacenesMetas = [];
+  document.querySelectorAll("#tablaAlmacenes .meta-input").forEach(el => {
+    const valorMeta = parseFloat(el.value) || 0;
+    if (valorMeta > 0) {
+      almacenesMetas.push({
+        numAlmacen: el.getAttribute("data-num"),
+        nombreAlmacen: el.getAttribute("data-nombre"),
+        meta: valorMeta
       });
+    }
+  });
 
-      // Recopilar Almacenes y Metas
-      const almacenesMetas = [];
-      document.querySelectorAll("#tablaAlmacenes .meta-input").forEach(el => {
-        almacenesMetas.push({
-          numAlmacen: el.getAttribute("data-num"),
-          nombreAlmacen: el.getAttribute("data-nombre"),
-          meta: el.value || "0"
-        });
-      });
-      // Payload JSON completo
-      const payload = {
-        idSolicitud: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36),
-        timestamp: new Date().toISOString(),
-        nombreSolicitante: document.getElementById("nombreVendedor").value,
-        emailSolicitante: document.getElementById("email").value,
-        nombrePrograma: document.getElementById("nombrePrograma").value,
-        fechaInicio: document.getElementById("fechaInicio").value,
-        fechaFin: document.getElementById("fechaFin").value,
-        origenProveedor: document.getElementById("origenProveedor").value,
-        numProveedor: document.getElementById("numProveedor").value,
-        nombreProveedor: document.getElementById("nomProveedor").value,
-        numMarca: document.getElementById("numMarca").value,
-        nombreMarca: document.getElementById("nomMarca").value,
-        numSeccion: document.getElementById("numSeccion").value,
-        nombreSeccion: document.getElementById("nomSeccion").value,
-        nombreComprador: document.getElementById("nombreComprador").value,
-        emailComprador: document.getElementById("emailComprador").value,
-        tipoPrograma: document.getElementById("tipoPrograma").value,
-        publicoDirigido: document.getElementById("publicoDirigido").value,
-        fechaEnvioPremios: document.getElementById("fechaEnvioPremios").value || "",
-        centroCostes: document.getElementById("centroCostes").value,
-        tipoIncentivo: document.getElementById("tipoIncentivo").value,
-        valorPremios: parseFloat(document.getElementById("valorPremios").value) || 0,
-        objetivo: document.getElementById("objetivo").value,
-        mecanicaPrograma: document.getElementById("mecanica").value,
-        canalVenta: document.getElementById("canalVenta").value,
-        medicionIncentivo: document.getElementById("medicionIncentivo").value,
-        criterioDesempate: document.getElementById("criterioDesempate").value,
-        minimoVenta: parseFloat(document.getElementById("minimoVenta").value) || 0,
-        periodoCorte: document.getElementById("periodoCorte").value,
-        requisitosAdicionales: document.getElementById("requisitosAdicionales").value,
-        tipoMetaGlobal: document.getElementById("tipoMetaGlobal").value,
-        skus: skus,
-        almacenesMetas: almacenesMetas
-      };
+  // 3. Payload JSON completo
+  const payload = {
+    idSolicitud: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36),
+    timestamp: new Date().toISOString(),
+    
+    // Sección 1
+    nombreSolicitante: document.getElementById("nombreVendedor").value,
+    emailSolicitante: document.getElementById("email").value,
+    nombrePrograma: document.getElementById("nombrePrograma").value,
+    fechaInicio: document.getElementById("fechaInicio").value,
+    fechaFin: document.getElementById("fechaFin").value,
+    
+    // Sección 2
+    origenProveedor: document.getElementById("origenProveedor").value,
+    numProveedor: document.getElementById("numProveedor").value,
+    nombreProveedor: document.getElementById("nomProveedor").value,
+    numMarca: document.getElementById("numMarca").value,
+    nombreMarca: document.getElementById("nomMarca").value,
+    numSeccion: document.getElementById("numSeccion").value,
+    nombreSeccion: document.getElementById("nomSeccion").value,
+    nombreComprador: document.getElementById("nombreComprador").value,
+    emailComprador: document.getElementById("emailComprador").value,
+    
+    // Sección 3
+    tipoPrograma: document.getElementById("tipoPrograma").value,
+    publicoDirigido: document.getElementById("publicoDirigido").value,
+    tipoIncentivo: document.getElementById("tipoIncentivo").value,
+    valorPremios: parseFloat(document.getElementById("valorPremios").value) || 0,
+    centroCostes: document.getElementById("centroCostes").value,
+    fechaEnvioPremios: document.getElementById("fechaEnvioPremios").value || "",
+    objetivo: document.getElementById("objetivo").value,
+    mecanicaPrograma: document.getElementById("mecanica").value,
+    
+    // Sección 4
+    skusParticipantes: skus,
+    
+    // Sección 5
+    tipoMetaGlobal: document.getElementById("tipoMetaGlobal").value,
+    almacenesMetas: almacenesMetas, // <-- Aquí se incluye la lista de almacenes
+    
+    // Sección 6
+    canalVenta: document.getElementById("canalVenta").value,
+    medicionIncentivo: document.getElementById("medicionIncentivo").value,
+    criterioDesempate: document.getElementById("criterioDesempate").value,
+    minimoVenta: parseFloat(document.getElementById("minimoVenta").value) || 0,
+    periodoCorte: document.getElementById("periodoCorte").value,
+    requisitosAdicionales: document.getElementById("requisitosAdicionales").value
+  };
 
-      try {
-        const response = await fetch(MAKE_WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          alert("¡Solicitud enviada exitosamente!");
-          document.getElementById("incentivosForm").reset();
-          document.querySelector("#tablaSkus tbody").innerHTML = "";
-          cargarTablaAlmacenes();
-        } else {
-          alert("Error al enviar la solicitud. Código: " + response.status);
-        }
-      } catch (err) {
-        console.error("Error de envío:", err);
-        alert("Ocurrió un error al conectar con el servidor.");
-      } finally {
-        btnEnviar.disabled = false;
-        btnEnviar.innerText = "Enviar Solicitud Completa";
-      }
+  // Enviar a Make Webhook
+  try {
+    const response = await fetch(MAKE_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
+
+    if (response.ok) {
+      alert("¡Solicitud enviada con éxito!");
+      document.getElementById("incentivosForm").reset();
+      document.querySelector("#tablaSkus tbody").innerHTML = "";
+      cargarTablaAlmacenes();
+    } else {
+      alert("Hubo un error al enviar la solicitud. Inténtalo de nuevo.");
+    }
+  } catch (error) {
+    console.error("Error al enviar:", error);
+    alert("Error de conexión al enviar el formulario.");
+  } finally {
+    btnEnviar.disabled = false;
+    btnEnviar.innerText = "Enviar Solicitud Completa";
+  }
+});
+
   </script>
 </body>
 </html>
