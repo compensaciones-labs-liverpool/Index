@@ -7,7 +7,7 @@
   
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Fonts - Inter -->
+  <!-- Fonts - Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
@@ -70,7 +70,7 @@
       border-bottom: 1px solid var(--color-border);
     }
 
-    /* Estilos de Etiquetas e Inputs tipo Apple/Google */
+    /* Estilos de Etiquetas e Inputs*/
     .form-label {
       font-size: 0.875rem;
       font-weight: 500;
@@ -188,7 +188,7 @@
     
     <form id="incentivosForm">
       
-      <!-- SECCIÓN 1 -->
+      <!-- Sección 1-->
       <div class="mb-5">
         <h4 class="step-title">1. Datos del Solicitante y Programa</h4>
         <div class="row g-3">
@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 2 -->
+      <!-- Sección 2 -->
       <div class="mb-5">
         <h4 class="step-title">2. Clasificación y Comprador Responsable</h4>
         <div class="row g-3">
@@ -261,11 +261,23 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 3 (CORREGIDA Y ALINEADA) -->
+      <!-- Sección 3 -->
       <div class="mb-5">
         <h4 class="step-title">3. Logística, Presupuesto y Mecánica</h4>
         <div class="row g-3">
-          <div class="col-md-4 field-group">
+          <div class="col-md-6 field-group">
+            <label class="form-label">Tipo de Programa</label>
+            <select class="form-select" id="tipoPrograma" name="tipoPrograma" required>
+              <option value="" disabled selected>Selecciona una opción</option>
+              <option value="Reto 100%">Reto 100%</option>
+              <option value="Top Performer">Top Performer</option>
+              <option value="Acelerador">Acelerador</option>
+              <option value="Doble Victoria">Doble Victoria</option>
+              <option value="Gran Desafío">Gran Desafío</option>
+            </select>
+          </div>
+          
+          <div class="col-md-6 field-group">
             <label class="form-label">Público Dirigido</label>
             <select class="form-select" id="publicoDirigido" name="publicoDirigido">
               <option value="Vendedores">Vendedores</option>
@@ -274,21 +286,8 @@
               <option value="Otros">Otros</option>
             </select>
           </div>
-
+          
           <div class="col-md-4 field-group">
-            <label class="form-label">
-              <span>Envío de Premios</span>
-              <span class="badge-optional">Opcional</span>
-            </label>
-            <input type="date" class="form-control" id="fechaEnvioPremios" name="fechaEnvioPremios">
-          </div>
-
-          <div class="col-md-4 field-group">
-            <label class="form-label">Centro de Costes</label>
-            <input type="text" class="form-control" id="centroCostes" name="centroCostes" required>
-          </div>
-
-          <div class="col-md-6 field-group">
             <label class="form-label">Tipo de Incentivo</label>
             <select class="form-select" id="tipoIncentivo" name="tipoIncentivo">
               <option value="Especie">Especie</option>
@@ -296,25 +295,37 @@
               <option value="Vale Incentivo">Vale Incentivo</option>
             </select>
           </div>
-
-          <div class="col-md-6 field-group">
+          
+          <div class="col-md-4 field-group">
             <label class="form-label">Valor Aprox. de Premios ($MXN)</label>
             <input type="number" class="form-control" id="valorPremios" name="valorPremios" required>
           </div>
-
+          
+          <div class="col-md-4 field-group">
+            <label class="form-label">Centro de Costes</label>
+            <input type="text" class="form-control" id="centroCostes" name="centroCostes" required>
+          </div>
+          
+          <div class="col-md-6 field-group">
+            <label class="form-label">
+              <span>Envío de Premios</span>
+              <span class="badge-optional">Opcional</span>
+            </label>
+            <input type="date" class="form-control" id="fechaEnvioPremios" name="fechaEnvioPremios">
+          </div>
+          
           <div class="col-12 field-group">
             <label class="form-label">Objetivo del Programa</label>
             <textarea class="form-control" id="objetivo" name="objetivo" rows="2" required></textarea>
           </div>
-
+          
           <div class="col-12 field-group">
             <label class="form-label">Mecánica del Programa (Descripción)</label>
             <textarea class="form-control" id="mecanica" name="mecanica" rows="3" required></textarea>
           </div>
         </div>
       </div>
-
-      <!-- SECCIÓN 4: CÓDIGOS / SKUS -->
+      <!-- Sección 4 -->
       <div class="mb-5">
         <h4 class="step-title">4. SKUs Participantes</h4>
         <p class="text-muted small">Escribe los códigos SKU uno por renglón o pegados desde Excel.</p>
@@ -339,7 +350,7 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 5: ALMACENES Y METAS -->
+      <!-- Sección 5 -->
       <div class="mb-5">
         <h4 class="step-title">5. Almacenes Participantes y Metas</h4>
         <div class="row g-3 mb-3">
@@ -368,7 +379,7 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 6: TÉRMINOS Y CONDICIONES -->
+      <!-- Sección 6 -->
       <div class="mb-5">
         <h4 class="step-title">6. Términos, Condiciones y Lineamientos</h4>
         <div class="row g-3">
@@ -433,9 +444,9 @@
     </form>
   </div>
 
-  <!-- JavaScript y Lógica -->
+  <!-- Lógica -->
   <script>
-    // URL de tu Webhook en Make.com
+    // URL del Webhook
     const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/9i8toum62wetrwz9x298ttstqdqvax00";
 
     // Lista por defecto de Almacenes Liverpool
@@ -483,7 +494,7 @@
       {num:"0191", nombre:"Liverpool Tuxtla Oriente"}, {num:"0304", nombre:"Liverpool Ciudad del Carmen"}, {num:"0307", nombre:"Liverpool Playa del Carmen"},
       {num:"0458", nombre:"Liverpool Mérida Cabo Norte"}, {num:"0472", nombre:"Liverpool Comitan"},
 
-  /* LIVERPOOL EXPRESS AGREGADOS */
+  /* Lista de Almacenes Liverpool Express */
       {num:"0187", nombre:"Liverpool Express Sn Andres"}, {num:"0212", nombre:"Boutique Los Cabos"}, {num:"0248", nombre:"Liverpool Express Cd Valles"},
       {num:"0254", nombre:"Liverpool Express Dolores H"}, {num:"0371", nombre:"Liverpool Express Palenque"}, {num:"0398", nombre:"Liverpool Express Lazaro Carde"},
       {num:"0615", nombre:"Liverpool Express Cd Guzman"}, {num:"0642", nombre:"Liverpool Express San Juan De"}, {num:"0690", nombre:"Liverpool Express Zinacantepec"},
