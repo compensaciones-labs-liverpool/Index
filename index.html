@@ -50,7 +50,6 @@
         color: var(--color-texto-header-tabla) !important;
       }
 
-      /* Contenedor con scroll para la tabla de almacenes */
       .tabla-scroll-container {
         max-height: 380px;
         overflow-y: auto;
@@ -74,6 +73,11 @@
         max-height: 40px;
         width: auto;
         object-fit: contain;
+      }
+
+      .card-lineamientos {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--color-boton-principal);
       }
     </style>
   </head>
@@ -118,7 +122,7 @@
 
         <!-- Sección 2 -->
         <div class="mb-5">
-          <h4 class="step-title">2. Clasificación y Proveedor</h4>
+          <h4 class="step-title">2. Clasificación, Proveedor y Comprador Responsable</h4>
           <div class="row g-3">
             <div class="col-md-4">
               <label class="form-label">Origen del Proveedor</label>
@@ -151,6 +155,16 @@
               <label class="form-label">Nombre de la Sección</label>
               <input type="text" class="form-control" id="nomSeccion" required>
             </div>
+            
+            <!-- Nuevos Campos: Comprador Responsable -->
+            <div class="col-md-6">
+              <label class="form-label">Nombre del Comprador Responsable</label>
+              <input type="text" class="form-control" id="nombreComprador" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Correo Electrónico del Comprador Responsable</label>
+              <input type="email" class="form-control" id="emailComprador" required>
+            </div>
           </div>
         </div>
 
@@ -168,8 +182,8 @@
               </select>
             </div>
             <div class="col-md-4">
-              <label class="form-label">Fecha de Envío de los Premios</label>
-              <input type="date" class="form-control" id="fechaEnvioPremios" required>
+              <label class="form-label">Fecha de Envío de los Premios <span class="text-muted">(Opcional)</span></label>
+              <input type="date" class="form-control" id="fechaEnvioPremios">
             </div>
             <div class="col-md-4">
               <label class="form-label">Centro de Costes</label>
@@ -201,25 +215,77 @@
         <!-- Sección 4 -->
         <div class="mb-5">
           <h4 class="step-title">4. SKUs Participantes</h4>
+          <p class="text-muted small">Ingresa manualmente o pega una lista de SKUs (uno por línea o separados por comas/espacios). Cada uno se registrará en una fila independiente.</p>
+          
+          <div class="mb-3">
+            <label class="form-label">Copiar y Pegar SKUs Masivamente</label>
+            <textarea class="form-control" id="skuMassiveInput" rows="4" placeholder="Ejemplo:&#10;12345678&#10;87654321&#10;11223344"></textarea>
+          </div>
+          
           <div id="skuContainer" class="row g-2 mb-2">
             <div class="col-md-4 input-group mb-1">
-              <input type="text" class="form-control sku-input" placeholder="Código SKU" required>
+              <input type="text" class="form-control sku-input" placeholder="Código SKU">
               <button class="btn btn-outline-danger" type="button" onclick="eliminarFilaSku(this)">X</button>
             </div>
           </div>
-          <button type="button" class="btn btn-primary w-10" onclick="agregarFilaSku()">+ Agregar otro SKU</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarFilaSku()">+ Agregar un SKU individual</button>
         </div>
 
-        <!-- Sección 5: Tabla de almacenes y metas-->
+        <!-- Sección 5 -->
         <div class="mb-5">
-          <h4 class="step-title">5. Almacenes Seleccionados y Metas</h4>
-          <p class="text-muted small">Filtra la lista de tiendas, marca la casilla correspondiente para seleccionarla e ingresa su meta ($MXN).</p>
+          <h4 class="step-title">5. Términos y Condiciones</h4>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Canal de Venta Participante</label>
+              <select class="form-select" id="canalVenta" required>
+                <option value="Físico">Físico</option>
+                <option value="Virtual">Virtual</option>
+                <option value="Ambos (Físico y Virtual)">Ambos (Físico y Virtual)</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Medición del Incentivo</label>
+              <select class="form-select" id="medicionIncentivo" required>
+                <option value="Meta de Venta Neta">Meta de Venta Neta</option>
+                <option value="Por Piezas">Por Piezas</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Criterio de Desempate</label>
+              <input type="text" class="form-control" id="criterioDesempate" placeholder="Ej: Venta neta acumulada mayor" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Mínimo de Venta para Participar</label>
+              <input type="text" class="form-control" id="minimoVenta" placeholder="Ej: $10,000 o 50 piezas" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Período de Corte</label>
+              <input type="text" class="form-control" id="periodoCorte" placeholder="Ej: Semanal, Mensual, Al finalizar" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Requisitos Adicionales</label>
+              <textarea class="form-control" id="requisitosAdicionales" rows="2" placeholder="Especificar asistencias, capacitaciones, etc."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 6: Tabla de almacenes y metas-->
+        <div class="mb-5">
+          <h4 class="step-title">6. Almacenes Seleccionados y Metas</h4>
           
-          <div class="row g-2 align-items-center mb-3">
-            <div class="col-md-8">
+          <div class="row g-3 mb-3 align-items-center">
+            <div class="col-md-4">
+              <label class="form-label font-weight-bold">Tipo de Meta Global</label>
+              <select class="form-select" id="tipoMeta" onchange="actualizarTipoMeta()">
+                <option value="Monto ($MXN)">Monto ($MXN)</option>
+                <option value="Piezas (Unidades)">Piezas (Unidades)</option>
+              </select>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Buscar Almacén</label>
               <input type="text" class="form-control" id="filtroTablaAlmacenes" placeholder="Filtrar tiendas por número o nombre" onkeyup="filtrarAlmacenes()">
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-3 text-end pt-4">
               <span class="badge bg-primary fs-6" id="contadorSeleccionados">0 tiendas seleccionadas</span>
             </div>
           </div>
@@ -233,7 +299,7 @@
                   </th>
                   <th class="tabla-header-personalizado" style="width: 120px;">No. Almacén</th>
                   <th class="tabla-header-personalizado">Nombre del Almacén</th>
-                  <th class="tabla-header-personalizado" style="width: 220px;">Meta ($MXN)</th>
+                  <th class="tabla-header-personalizado" id="headerMetaTabla" style="width: 220px;">Meta ($MXN)</th>
                 </tr>
               </thead>
               <tbody id="tbodyAlmacenesLista">
@@ -243,12 +309,38 @@
           </div>
         </div>
 
+        <!-- Sección 7: Lineamientos -->
+        <div class="mb-5">
+          <h4 class="step-title">7. Lineamientos del Programa</h4>
+          <div class="card card-lineamientos p-3 shadow-sm">
+            <h6 class="fw-bold text-dark mb-2">Condiciones Generales[cite: 1]:</h6>
+            <ul class="small mb-3">
+              <li>Los ganadores deben ser empleados activos a la fecha de entrega de premios[cite: 1].</li>
+              <li>En incentivos económicos vía nómina, no participa personal externo[cite: 1].</li>
+              <li>En incentivos económicos vía nómina, el proveedor deberá cubrir el importe total de premios + IVA[cite: 1].</li>
+              <li>En incentivos económicos vía nómina, el pago a los ganadores está sujeto a retención de ISR[cite: 1].</li>
+              <li>En incentivos en especie, el proveedor es responsable del envío de premios a las tiendas ganadoras[cite: 1].</li>
+              <li>No puede otorgarse incentivos del tipo "tarjetas de vales" o dinero electrónico que no pertenezcan a Liverpool[cite: 1].</li>
+              <li>Todos los proveedores pueden participar[cite: 1].</li>
+              <li>No está permitido implementar rifas en los programas de incentivos[cite: 1].</li>
+              <li>Los programas de incentivos no son limitativos, por tal motivo pueden participar todos los vendedores de la tienda sin importar la sección del vendedor[cite: 1].</li>
+            </ul>
+
+            <h6 class="fw-bold text-dark mb-2">Evidencia y Captura de Pantalla:</h6>
+            <p class="small text-muted mb-2">Es requisito indispensable tomar y conservar las **capturas de pantalla** de los reportes y ventas durante el periodo de vigencia para validar aclaraciones y entregables[cite: 1].</p>
+
+            <h6 class="fw-bold text-dark mb-1">Consideraciones Importantes[cite: 1]:</h6>
+            <p class="small text-muted mb-0">*** Si el colaborador está dado de baja al cálculo de resultados, ya no será considerado para la premiación[cite: 1].<br>
+            *** Los resultados oficiales serán compartidos por el equipo de productividad[cite: 1].<br>
+            *** Considerar que se debe seguir promoviendo y vendiendo artículos de todas las marcas de la sección[cite: 1].</p>
+          </div>
+        </div>
+
         <button type="button" id="btnEnviar" class="btn btn-custom w-100 p-3 fs-5" onclick="enviarDatos()">Enviar Solicitud Completa</button>
       </form>
     </div>
 
     <script>
-      // webhook
       const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/9i8toum62wetrwz9x298ttstqdqvax00";
 
       const ALMACENES_DB = [
@@ -293,7 +385,35 @@
         {num:"0021", nom:"Liverpool Villahermosa"}, {num:"0075", nom:"Liverpool Cancún"}, {num:"0076", nom:"Liverpool Mérida"},
         {num:"0079", nom:"Liverpool Chetumal"}, {num:"0102", nom:"Liverpool Campeche"}, {num:"0134", nom:"Liverpool Vhmosa. Altabrisa"},
         {num:"0191", nom:"Liverpool Tuxtla Oriente"}, {num:"0304", nom:"Liverpool Ciudad del Carmen"}, {num:"0307", nom:"Liverpool Playa del Carmen"},
-        {num:"0458", nom:"Liverpool Mérida Cabo Norte"}, {num:"0472", nom:"Liverpool Comitan"}
+        {num:"0458", nom:"Liverpool Mérida Cabo Norte"}, {num:"0472", nom:"Liverpool Comitan"},
+
+        /* LIVERPOOL EXPRESS AGREGADOS */
+        {num:"0187", nom:"Liverpool Express Sn Andres"}, {num:"0212", nom:"Boutique Los Cabos"}, {num:"0248", nom:"Liverpool Express Cd Valles"},
+        {num:"0254", nom:"Liverpool Express Dolores H"}, {num:"0371", nom:"Liverpool Express Palenque"}, {num:"0398", nom:"Liverpool Express Lazaro Carde"},
+        {num:"0615", nom:"Liverpool Express Cd Guzman"}, {num:"0642", nom:"Liverpool Express San Juan De"}, {num:"0690", nom:"Liverpool Express Zinacantepec"},
+        {num:"0812", nom:"Liverpool Express Valle de Bra"}, {num:"0813", nom:"Liverpool Express Tulancingo"}, {num:"0815", nom:"Liverpool Express Huatulco"},
+        {num:"0816", nom:"Liverpool Express Minatitlan"}, {num:"0817", nom:"Liverpool Express Atlacomulco"}, {num:"0819", nom:"Liverpool Express Arandas"},
+        {num:"0821", nom:"Liverpool Express Ensenada"}, {num:"0844", nom:"Liverpool Express Tepatitlán"}, {num:"0846", nom:"Liverpool Express Valladolid"},
+        {num:"0847", nom:"Liverpool Express Paraíso"}, {num:"0848", nom:"Liverpool Express Coatepec"}, {num:"0849", nom:"Liverpool Express Villaflores"},
+        {num:"0852", nom:"Liverpool Express San Cristóba"}, {num:"0853", nom:"Liverpool Express Tulúm"}, {num:"0854", nom:"Liverpool Express Champotón"},
+        {num:"0875", nom:"Liverpool Express Nacajuca"}, {num:"0877", nom:"Liverpool Express Zihuatanejo"}, {num:"0878", nom:"Liverpool Express Lagos de Mor"},
+        {num:"0882", nom:"Liverpool Express Manzanillo"}, {num:"0890", nom:"Liverpool Express Bahía de Ban"}, {num:"0891", nom:"Liverpool Express Tizayuca"},
+        {num:"1027", nom:"Liverpool Express Cuauhtemoc"}, {num:"1029", nom:"Liverpool Express Cardenas"}, {num:"1031", nom:"Liverpool Express Jojutla"},
+        {num:"1032", nom:"Liverpool Express Tula"}, {num:"1033", nom:"Liverpool Express Guasave"}, {num:"1034", nom:"Liverpool Express Piedras Negras"},
+        {num:"1035", nom:"Liverpool Express Delicias"}, {num:"1036", nom:"Liverpool Express Tepeji"}, {num:"1059", nom:"Liverpool Express Nogales"},
+        {num:"1061", nom:"Liverpool Express Matamoros"}, {num:"1062", nom:"Liverpool Express Downtown Puebla"}, {num:"1063", nom:"Liverpool Express Cozumel"},
+        {num:"1064", nom:"Liverpool Express Texcoco"}, {num:"1065", nom:"Liverpool Express San Francisco del Rincon"}, {num:"1101", nom:"Liverpool Express Zitacuaro"},
+        {num:"1102", nom:"Liverpool Express Huehuetoca"}, {num:"1103", nom:"Liverpool Express Reynosa"}, {num:"1104", nom:"Liverpool Express Macuspana"},
+        {num:"1105", nom:"Liverpool Express Tepeaca"}, {num:"1110", nom:"Liverpool Express Iguala"}, {num:"1111", nom:"Liverpool Express Cadereyta"},
+        {num:"1118", nom:"Liverpool Express Navojoa"}, {num:"1120", nom:"Liverpool Express Comalcalco"}, {num:"1121", nom:"Liverpool Express Tonala"},
+        {num:"1132", nom:"Liverpool Express Chalco"}, {num:"1133", nom:"Liverpool Express Parral"}, {num:"1134", nom:"Liverpool Express Silao"},
+        {num:"1135", nom:"Liverpool Express Ixtapaluca"}, {num:"1154", nom:"Liv Express Los Reyes - La Paz"}, {num:"1155", nom:"Liverpool Express Cunduacán"},
+        {num:"1156", nom:"Liverpool Express Temixco"}, {num:"1157", nom:"Liverpool Express Chimalhuacan"}, {num:"1159", nom:"Liverpool Express Navolato"},
+        {num:"1160", nom:"Liverpool Express Guamuchil"}, {num:"1162", nom:"Liverpool Express San Martín Texmelucan"}, {num:"1205", nom:"Liverpool Express Tuxtepec"},
+        {num:"1211", nom:"Liverpool Express Juchitan"}, {num:"1214", nom:"Liverpool Express Martinez de la Torre"}, {num:"1215", nom:"Liverpool Express Zacatlan"},
+        {num:"1216", nom:"Liverpool Express Nuevo Laredo"}, {num:"1221", nom:"Liverpool Express Altamira"}, {num:"1222", nom:"Liverpool Express Papantla"},
+        {num:"1224", nom:"Liverpool Express El Salto"}, {num:"1229", nom:"Liverpool Express Ixmiquilpan"}, {num:"1230", nom:"Liverpool Express Tequisquiapan"},
+        {num:"1235", nom:"Liverpool Express Patzcuaro"}
       ];
 
       window.onload = function() {
@@ -314,10 +434,20 @@
             <td><strong>${a.num}</strong></td>
             <td>${a.nom}</td>
             <td>
-              <input type="number" class="form-control form-control-sm meta-input" id="meta_${a.num}" placeholder="Meta en $" disabled>
+              <input type="number" class="form-control form-control-sm meta-input" id="meta_${a.num}" placeholder="Meta" disabled>
             </td>
           `;
           tbody.appendChild(tr);
+        });
+      }
+
+      function actualizarTipoMeta() {
+        const tipoMeta = document.getElementById('tipoMeta').value;
+        const header = document.getElementById('headerMetaTabla');
+        header.innerText = `Meta (${tipoMeta})`;
+        
+        document.querySelectorAll('.meta-input').forEach(input => {
+          input.placeholder = `Meta en ${tipoMeta}`;
         });
       }
 
@@ -371,18 +501,45 @@
       function agregarFilaSku() {
         const div = document.createElement('div');
         div.className = 'col-md-4 input-group mb-1';
-        div.innerHTML = '<input type="text" class="form-control sku-input" placeholder="Código de SKU" required>' +
+        div.innerHTML = '<input type="text" class="form-control sku-input" placeholder="Código SKU">' +
                         '<button class="btn btn-outline-danger" type="button" onclick="eliminarFilaSku(this)">X</button>';
         document.getElementById('skuContainer').appendChild(div);
       }
 
       function eliminarFilaSku(btn) {
-        if(document.querySelectorAll('.sku-input').length > 1) btn.parentElement.remove();
+        btn.parentElement.remove();
+      }
+
+      function procesarSkus() {
+        let skus = [];
+        
+        // 1. Obtener del área masiva
+        const massiveText = document.getElementById('skuMassiveInput').value;
+        if (massiveText.trim() !== "") {
+          const items = massiveText.split(/[\n,\s]+/);
+          items.forEach(item => {
+            const clean = item.trim();
+            if (clean !== "" && !skus.includes(clean)) {
+              skus.push(clean);
+            }
+          });
+        }
+
+        // 2. Obtener de los inputs individuales
+        document.querySelectorAll('.sku-input').forEach(i => {
+          const clean = i.value.trim();
+          if (clean !== "" && !skus.includes(clean)) {
+            skus.push(clean);
+          }
+        });
+
+        return skus;
       }
 
       function obtenerAlmacenesSeleccionados() {
         let metas = [];
         let errorMetaVacia = false;
+        const tipoMeta = document.getElementById('tipoMeta').value;
 
         const checks = document.querySelectorAll('.check-almacen:checked');
         checks.forEach(check => {
@@ -397,6 +554,7 @@
           metas.push({
             numero: almacenObj.num,
             nombre: almacenObj.nom,
+            tipoMeta: tipoMeta,
             meta: metaValor
           });
         });
@@ -407,6 +565,12 @@
       function enviarDatos() {
         const form = document.getElementById('incentivosForm');
         const { metas, errorMetaVacia } = obtenerAlmacenesSeleccionados();
+        const skus = procesarSkus();
+
+        if (skus.length === 0) {
+          alert("Debes ingresar al menos un SKU participante (manualmente o mediante pegado masivo).");
+          return;
+        }
 
         if (metas.length === 0) {
           alert("Debes seleccionar al menos una tienda de la lista y asignarle una meta.");
@@ -424,10 +588,7 @@
         }
 
         const btn = document.getElementById('btnEnviar');
-        let skus = [];
-        document.querySelectorAll('.sku-input').forEach(i => { if(i.value.trim() !== "") skus.push(i.value.trim()); });
 
-        // Cambiar estado del botón
         btn.disabled = true;
         btn.innerText = "Procesando y enviando solicitud...";
 
@@ -444,18 +605,26 @@
           nomMarca: document.getElementById('nomMarca').value,
           numSeccion: document.getElementById('numSeccion').value,
           nomSeccion: document.getElementById('nomSeccion').value,
+          nombreComprador: document.getElementById('nombreComprador').value,
+          emailComprador: document.getElementById('emailComprador').value,
           publicoDirigido: document.getElementById('publicoDirigido').value,
-          fechaEnvioPremios: document.getElementById('fechaEnvioPremios').value,
+          fechaEnvioPremios: document.getElementById('fechaEnvioPremios').value || "N/A",
           centroCostes: document.getElementById('centroCostes').value,
           tipoIncentivo: document.getElementById('tipoIncentivo').value,
           valorPremios: document.getElementById('valorPremios').value,
           objetivo: document.getElementById('objetivo').value,
           mecanica: document.getElementById('mecanica').value,
+          canalVenta: document.getElementById('canalVenta').value,
+          medicionIncentivo: document.getElementById('medicionIncentivo').value,
+          criterioDesempate: document.getElementById('criterioDesempate').value,
+          minimoVenta: document.getElementById('minimoVenta').value,
+          periodoCorte: document.getElementById('periodoCorte').value,
+          requisitosAdicionales: document.getElementById('requisitosAdicionales').value,
+          tipoMetaGlobal: document.getElementById('tipoMeta').value,
           skus: skus,
           metas: metas
         };
 
-        // Envío directo mediante FETCH a Make.com
         fetch(MAKE_WEBHOOK_URL, {
           method: 'POST',
           headers: {
