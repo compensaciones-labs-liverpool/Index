@@ -1,306 +1,564 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Solicitud de Programas de Incentivos | Liverpool</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitud de Programas de Incentivos | Liverpool</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts - Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-bg-page: #f5f5f7;
+      --color-card-bg: #ffffff;
+      --color-primary: #e10098; /* Rosa Liverpool */
+      --color-primary-hover: #b8007c;
+      --color-text-main: #1d1d1f;
+      --color-text-muted: #86868b;
+      --color-border: #e5e5ea;
+      --color-input-bg: #f8f9fa;
+      --radius-card: 18px;
+      --radius-input: 10px;
+    }
+
+    body { 
+      background-color: var(--color-bg-page); 
+      padding: 40px 15px; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      color: var(--color-text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .form-container { 
+      background: var(--color-card-bg); 
+      padding: 48px; 
+      border-radius: var(--radius-card); 
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); 
+      max-width: 960px; 
+      margin: 0 auto; 
+      border: 1px solid var(--color-border);
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .logo-container img {
+      max-height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .main-title {
+      font-weight: 700;
+      font-size: 1.85rem;
+      letter-spacing: -0.02em;
+      color: var(--color-text-main);
+    }
+
+    .step-title { 
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--color-text-main);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Estilos de Etiquetas e Inputs tipo Apple/Google */
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #3a3a3c;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-control, .form-select {
+      background-color: var(--color-input-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      color: var(--color-text-main);
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      background-color: #ffffff;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(225, 0, 152, 0.12);
+      outline: none;
+    }
+
+    .badge-optional {
+      font-size: 0.725rem;
+      font-weight: 500;
+      background-color: #e9ecef;
+      color: #6c757d;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    /* Contenedor flexible para alineación vertical perfecta */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Tablas con scroll interno y cabecera fija */
+    .tabla-scroll-container {
+      max-height: 320px;
+      overflow-y: auto;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+      background: #ffffff;
+    }
+
+    .table {
+      margin-bottom: 0;
+      font-size: 0.9rem;
+    }
+
+    .table thead th {
+      background-color: #f2f2f7 !important;
+      color: #48484a;
+      font-weight: 600;
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .btn-custom { 
+      background-color: var(--color-primary); 
+      color: white; 
+      font-weight: 600;
+      border-radius: var(--radius-input);
+      padding: 14px 24px;
+      border: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-custom:hover { 
+      background-color: var(--color-primary-hover); 
+      color: white; 
+    }
+
+    .btn-custom:active {
+      transform: scale(0.99);
+    }
+
+    .card-lineamientos {
+      background-color: #f8f9fa;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+      padding: 20px;
+    }
+
+    .card-lineamientos ul {
+      padding-left: 20px;
+      margin-bottom: 0;
+    }
+
+    .card-lineamientos li {
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #48484a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
     
-    <style>
-      :root {
-        --color-bg-page: #f5f5f7; /* Gris suave estilo Apple */
-        --color-card-bg: #ffffff;
-        --color-primary: #0066cc; /* Azul Apple/Google */
-        --color-primary-hover: #0052a3;
-        --color-text-main: #1d1d1f;
-        --color-text-muted: #86868b;
-        --color-border: #e5e5ea;
-        --color-input-bg: #f8f9fa;
-        --radius-card: 18px;
-        --radius-input: 10px;
-      }
-
-      body { 
-        background-color: var(--color-bg-page); 
-        padding: 40px 15px; 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-        color: var(--color-text-main);
-        -webkit-font-smoothing: antialiased;
-      }
-
-      .form-container { 
-        background: var(--color-card-bg); 
-        padding: 48px; 
-        border-radius: var(--radius-card); 
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); 
-        max-width: 920px; 
-        margin: 0 auto; 
-        border: 1px solid var(--color-border);
-      }
-
-      .logo-container {
-        text-align: center;
-        margin-bottom: 24px;
-      }
-      .logo-container img {
-        max-height: 42px;
-        width: auto;
-        object-fit: contain;
-      }
-
-      .main-title {
-        font-weight: 700;
-        font-size: 1.85rem;
-        letter-spacing: -0.02em;
-        color: var(--color-text-main);
-      }
-
-      .step-title { 
-        font-size: 1.15rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        color: var(--color-text-main);
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--color-border);
-      }
-
-      /* Etiquetas e Inputs limpios tipo Apple/Google */
-      .form-label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #3a3a3c;
-        margin-bottom: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .form-control, .form-select {
-        background-color: var(--color-input-bg);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-input);
-        padding: 10px 14px;
-        font-size: 0.95rem;
-        color: var(--color-text-main);
-        transition: all 0.2s ease;
-      }
-
-      .form-control:focus, .form-select:focus {
-        background-color: #ffffff;
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.12);
-        outline: none;
-      }
-
-      .badge-optional {
-        font-size: 0.725rem;
-        font-weight: 500;
-        background-color: #e9ecef;
-        color: #6c757d;
-        padding: 2px 8px;
-        border-radius: 12px;
-      }
-
-      /* Alineación perfecta en rejillas */
-      .field-group {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-
-      /* Estilo para tablas con scroll */
-      .tabla-scroll-container {
-        max-height: 360px;
-        overflow-y: auto;
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-input);
-      }
-
-      .table {
-        margin-bottom: 0;
-        font-size: 0.9rem;
-      }
-
-      .table thead th {
-        background-color: #f2f2f7 !important;
-        color: #48484a;
-        font-weight: 600;
-        border-bottom: 1px solid var(--color-border);
-        position: sticky;
-        top: 0;
-        z-index: 2;
-      }
-
-      .btn-custom { 
-        background-color: var(--color-primary); 
-        color: white; 
-        font-weight: 600;
-        border-radius: var(--radius-input);
-        padding: 14px 24px;
-        border: none;
-        transition: background-color 0.2s ease, transform 0.1s ease;
-      }
-
-      .btn-custom:hover { 
-        background-color: var(--color-primary-hover); 
-        color: white; 
-      }
-
-      .btn-custom:active {
-        transform: scale(0.99);
-      }
-
-      .card-lineamientos {
-        background-color: #f8f9fa;
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-input);
-      }
-    </style>
-  </head>
-  <body>
-
-    <div class="form-container">
-      
-      <div class="logo-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/El_Puerto_de_Liverpool_%28group%29_logo.png" alt="El Puerto de Liverpool">
-      </div>
-
-      <h2 class="text-center main-title mb-5">Solicitud de Programa de Incentivos</h2>
-      
-      <form id="incentivosForm">
-        
-        <!-- Sección 1 -->
-        <div class="mb-5">
-          <h4 class="step-title">1. Datos del Solicitante y Programa</h4>
-          <div class="row g-3">
-            <div class="col-md-6 field-group">
-              <label class="form-label">Nombre del Solicitante</label>
-              <input type="text" class="form-control" id="nombreVendedor" required>
-            </div>
-            <div class="col-md-6 field-group">
-              <label class="form-label">Correo Electrónico</label>
-              <input type="email" class="form-control" id="email" required>
-            </div>
-            <div class="col-12 field-group">
-              <label class="form-label">Nombre del Programa de Incentivos</label>
-              <input type="text" class="form-control" id="nombrePrograma" required>
-            </div>
-            <div class="col-md-6 field-group">
-              <label class="form-label">Fecha de Inicio del Programa</label>
-              <input type="date" class="form-control" id="fechaInicio" required>
-            </div>
-            <div class="col-md-6 field-group">
-              <label class="form-label">Fecha de Fin del Programa</label>
-              <input type="date" class="form-control" id="fechaFin" required>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sección 2 -->
-        <div class="mb-5">
-          <h4 class="step-title">2. Clasificación y Comprador Responsable</h4>
-          <div class="row g-3">
-            <div class="col-md-4 field-group">
-              <label class="form-label">Origen del Proveedor</label>
-              <select class="form-select" id="origenProveedor">
-                <option value="Nacional">Nacional</option>
-                <option value="Extranjero">Extranjero</option>
-              </select>
-            </div>
-            <div class="col-md-3 field-group">
-              <label class="form-label">No. Proveedor</label>
-              <input type="text" class="form-control" id="numProveedor" required>
-            </div>
-            <div class="col-md-5 field-group">
-              <label class="form-label">Nombre del Proveedor</label>
-              <input type="text" class="form-control" id="nomProveedor" required>
-            </div>
-            <div class="col-md-3 field-group">
-              <label class="form-label">No. Marca</label>
-              <input type="text" class="form-control" id="numMarca" required>
-            </div>
-            <div class="col-md-9 field-group">
-              <label class="form-label">Nombre de la Marca Participante</label>
-              <input type="text" class="form-control" id="nomMarca" required>
-            </div>
-            <div class="col-md-3 field-group">
-              <label class="form-label">No. Sección</label>
-              <input type="text" class="form-control" id="numSeccion" required>
-            </div>
-            <div class="col-md-9 field-group">
-              <label class="form-label">Nombre de la Sección</label>
-              <input type="text" class="form-control" id="nomSeccion" required>
-            </div>
-            <div class="col-md-6 field-group">
-              <label class="form-label">Comprador Responsable</label>
-              <input type="text" class="form-control" id="nombreComprador" placeholder="Nombre completo" required>
-            </div>
-            <div class="col-md-6 field-group">
-              <label class="form-label">Correo del Comprador Responsable</label>
-              <input type="email" class="form-control" id="emailComprador" placeholder="ejemplo@liverpool.com.mx" required>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sección 3: Alineación Perfecta de Campos (Corregida) -->
-        <div class="mb-5">
-          <h4 class="step-title">3. Logística, Presupuesto y Mecánica</h4>
-          <div class="row g-3">
-            <div class="col-md-4 field-group">
-              <label class="form-label">Público Dirigido</label>
-              <select class="form-select" id="publicoDirigido">
-                <option value="Vendedores">Vendedores</option>
-                <option value="Jefes de Departamento">Jefes de Departamento</option>
-                <option value="Ambos (Vendedores y Jefes)">Ambos (Vendedores y Jefes)</option>
-                <option value="Otros">Otros</option>
-              </select>
-            </div>
-
-            <!-- Campo Opcional con Badge sin romper alineación -->
-            <div class="col-md-4 field-group">
-              <label class="form-label">
-                <span>Envío de Premios</span>
-                <span class="badge-optional">Opcional</span>
-              </label>
-              <input type="date" class="form-control" id="fechaEnvioPremios">
-            </div>
-
-            <div class="col-md-4 field-group">
-              <label class="form-label">Centro de Costes</label>
-              <input type="text" class="form-control" id="centroCostes" required>
-            </div>
-
-            <div class="col-md-6 field-group">
-              <label class="form-label">Tipo de Incentivo</label>
-              <select class="form-select" id="tipoIncentivo">
-                <option value="Especie">Especie</option>
-                <option value="Efectivo">Efectivo</option>
-                <option value="Vale Incentivo">Vale Incentivo</option>
-              </select>
-            </div>
-
-            <div class="col-md-6 field-group">
-              <label class="form-label">Valor Aprox. de Premios ($MXN)</label>
-              <input type="number" class="form-control" id="valorPremios" required>
-            </div>
-
-            <div class="col-12 field-group">
-              <label class="form-label">Objetivo del Programa</label>
-              <textarea class="form-control" id="objetivo" rows="2" required></textarea>
-            </div>
-
-            <div class="col-12 field-group">
-              <label class="form-label">Mecánica del Programa (Descripción)</label>
-              <textarea class="form-control" id="mecanica" rows="3" required></textarea>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" id="btnEnviar" class="btn btn-custom w-100 fs-6" onclick="alert('Formulario actualizado con éxito.')">Enviar Solicitud Completa</button>
-      </form>
+    <div class="logo-container">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/El_Puerto_de_Liverpool_%28group%29_logo.png" alt="El Puerto de Liverpool">
     </div>
 
-  </body>
+    <h2 class="text-center main-title mb-5">Solicitud de Programa de Incentivos</h2>
+    
+    <form id="incentivosForm">
+      
+      <!-- SECCIÓN 1 -->
+      <div class="mb-5">
+        <h4 class="step-title">1. Datos del Solicitante y Programa</h4>
+        <div class="row g-3">
+          <div class="col-md-6 field-group">
+            <label class="form-label">Nombre del Solicitante</label>
+            <input type="text" class="form-control" id="nombreVendedor" name="nombreVendedor" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="col-12 field-group">
+            <label class="form-label">Nombre del Programa de Incentivos</label>
+            <input type="text" class="form-control" id="nombrePrograma" name="nombrePrograma" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Fecha de Inicio del Programa</label>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Fecha de Fin del Programa</label>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2 -->
+      <div class="mb-5">
+        <h4 class="step-title">2. Clasificación y Comprador Responsable</h4>
+        <div class="row g-3">
+          <div class="col-md-4 field-group">
+            <label class="form-label">Origen del Proveedor</label>
+            <select class="form-select" id="origenProveedor" name="origenProveedor">
+              <option value="Nacional">Nacional</option>
+              <option value="Extranjero">Extranjero</option>
+            </select>
+          </div>
+          <div class="col-md-3 field-group">
+            <label class="form-label">No. Proveedor</label>
+            <input type="text" class="form-control" id="numProveedor" name="numProveedor" required>
+          </div>
+          <div class="col-md-5 field-group">
+            <label class="form-label">Nombre del Proveedor</label>
+            <input type="text" class="form-control" id="nomProveedor" name="nomProveedor" required>
+          </div>
+          <div class="col-md-3 field-group">
+            <label class="form-label">No. Marca</label>
+            <input type="text" class="form-control" id="numMarca" name="numMarca" required>
+          </div>
+          <div class="col-md-9 field-group">
+            <label class="form-label">Nombre de la Marca Participante</label>
+            <input type="text" class="form-control" id="nomMarca" name="nomMarca" required>
+          </div>
+          <div class="col-md-3 field-group">
+            <label class="form-label">No. Sección</label>
+            <input type="text" class="form-control" id="numSeccion" name="numSeccion" required>
+          </div>
+          <div class="col-md-9 field-group">
+            <label class="form-label">Nombre de la Sección</label>
+            <input type="text" class="form-control" id="nomSeccion" name="nomSeccion" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Comprador Responsable</label>
+            <input type="text" class="form-control" id="nombreComprador" name="nombreComprador" placeholder="Nombre completo" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Correo del Comprador Responsable</label>
+            <input type="email" class="form-control" id="emailComprador" name="emailComprador" placeholder="ejemplo@liverpool.com.mx" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3 (CORREGIDA Y ALINEADA) -->
+      <div class="mb-5">
+        <h4 class="step-title">3. Logística, Presupuesto y Mecánica</h4>
+        <div class="row g-3">
+          <div class="col-md-4 field-group">
+            <label class="form-label">Público Dirigido</label>
+            <select class="form-select" id="publicoDirigido" name="publicoDirigido">
+              <option value="Vendedores">Vendedores</option>
+              <option value="Jefes de Departamento">Jefes de Departamento</option>
+              <option value="Ambos (Vendedores y Jefes)">Ambos (Vendedores y Jefes)</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 field-group">
+            <label class="form-label">
+              <span>Envío de Premios</span>
+              <span class="badge-optional">Opcional</span>
+            </label>
+            <input type="date" class="form-control" id="fechaEnvioPremios" name="fechaEnvioPremios">
+          </div>
+
+          <div class="col-md-4 field-group">
+            <label class="form-label">Centro de Costes</label>
+            <input type="text" class="form-control" id="centroCostes" name="centroCostes" required>
+          </div>
+
+          <div class="col-md-6 field-group">
+            <label class="form-label">Tipo de Incentivo</label>
+            <select class="form-select" id="tipoIncentivo" name="tipoIncentivo">
+              <option value="Especie">Especie</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Vale Incentivo">Vale Incentivo</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 field-group">
+            <label class="form-label">Valor Aprox. de Premios ($MXN)</label>
+            <input type="number" class="form-control" id="valorPremios" name="valorPremios" required>
+          </div>
+
+          <div class="col-12 field-group">
+            <label class="form-label">Objetivo del Programa</label>
+            <textarea class="form-control" id="objetivo" name="objetivo" rows="2" required></textarea>
+          </div>
+
+          <div class="col-12 field-group">
+            <label class="form-label">Mecánica del Programa (Descripción)</label>
+            <textarea class="form-control" id="mecanica" name="mecanica" rows="3" required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 4: CÓDIGOS / SKUS -->
+      <div class="mb-5">
+        <h4 class="step-title">4. SKUs Participantes</h4>
+        <p class="text-muted small">Escribe los códigos SKU uno por renglón o pegados desde Excel.</p>
+        <div class="mb-3">
+          <textarea class="form-control" id="skusMasivos" rows="4" placeholder="Ejemplo:&#10;12345678&#10;87654321"></textarea>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="procesarSKUs()">Procesar SKUs</button>
+        
+        <div class="tabla-scroll-container">
+          <table class="table table-hover align-middle mb-0" id="tablaSkus">
+            <thead>
+              <tr>
+                <th style="width: 80px;">#</th>
+                <th>Código SKU</th>
+                <th style="width: 100px;" class="text-center">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Se llena dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 5: ALMACENES Y METAS -->
+      <div class="mb-5">
+        <h4 class="step-title">5. Almacenes Participantes y Metas</h4>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label class="form-label">Tipo de Meta Global</label>
+            <select class="form-select" id="tipoMetaGlobal">
+              <option value="Monto ($MXN)">Monto ($MXN)</option>
+              <option value="Piezas (Unidades)">Piezas (Unidades)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="tabla-scroll-container">
+          <table class="table table-hover align-middle mb-0" id="tablaAlmacenes">
+            <thead>
+              <tr>
+                <th style="width: 100px;">No. Tienda</th>
+                <th>Nombre del Almacén</th>
+                <th style="width: 200px;">Meta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Se llena dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 6: TÉRMINOS Y CONDICIONES -->
+      <div class="mb-5">
+        <h4 class="step-title">6. Términos, Condiciones y Lineamientos</h4>
+        <div class="row g-3">
+          <div class="col-md-6 field-group">
+            <label class="form-label">Canal de Venta</label>
+            <select class="form-select" id="canalVenta">
+              <option value="Físico">Físico</option>
+              <option value="Virtual">Virtual</option>
+              <option value="Ambos (Físico y Virtual)">Ambos (Físico y Virtual)</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Medición del Incentivo</label>
+            <select class="form-select" id="medicionIncentivo">
+              <option value="Meta de Venta Neta">Meta de Venta Neta</option>
+              <option value="Por Piezas">Por Piezas</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Criterio de Desempate</label>
+            <input type="text" class="form-control" id="criterioDesempate" placeholder="Ej. Mayor venta neta acumulada">
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Mínimo de Venta Requerido ($MXN o Piezas)</label>
+            <input type="number" class="form-control" id="minimoVenta" placeholder="0">
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Periodo de Corte / Avances</label>
+            <select class="form-select" id="periodoCorte">
+              <option value="Semanal">Semanal</option>
+              <option value="Quincenal">Quincenal</option>
+              <option value="Mensual">Mensual</option>
+              <option value="Al Final del Evento">Al Final del Evento</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Requisitos Adicionales</label>
+            <input type="text" class="form-control" id="requisitosAdicionales" placeholder="Ej. Asistencia 100%, Sin devoluciones">
+          </div>
+        </div>
+
+        <div class="card-lineamientos mt-4">
+          <h6 class="fw-bold mb-3">Lineamientos Oficiales del Programa:</h6>
+          <ul>
+            <li>El presupuesto debe contar con la aprobación del comprador responsable antes de someter la solicitud.</li>
+            <li>Las metas asignadas deben conciliarse previamente con la operación de las tiendas seleccionadas.</li>
+            <li>Los premios en especie o vales serán entregados conforme al calendario estipulado por la Dirección de Compensaciones.</li>
+          </ul>
+        </div>
+      </div>
+
+      <button type="submit" id="btnEnviar" class="btn btn-custom w-100 fs-6">Enviar Solicitud Completa</button>
+    </form>
+  </div>
+
+  <!-- JavaScript y Lógica -->
+  <script>
+    // URL de tu Webhook en Make.com
+    const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/dsk974gq3qllm2m26ebc8n444mefv6j6";
+
+    // Lista por defecto de Almacenes Liverpool
+    const almacenesPredeterminados = [
+      { num: 102, nombre: "Liverpool Campeche" },
+      { num: 134, nombre: "Liverpool Vhmosa. Altabrisa" },
+      { num: 150, nombre: "Liverpool Insurgentes" },
+      { num: 180, nombre: "Liverpool Polanco" },
+      { num: 210, nombre: "Liverpool Santa Fe" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarTablaAlmacenes();
+    });
+
+    function cargarTablaAlmacenes() {
+      const tbody = document.querySelector("#tablaAlmacenes tbody");
+      tbody.innerHTML = "";
+      almacenesPredeterminados.forEach(almacen => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="fw-medium">${almacen.num}</td>
+          <td>${almacen.nombre}</td>
+          <td>
+            <input type="number" class="form-control form-control-sm meta-input" data-num="${almacen.num}" data-nombre="${almacen.nombre}" placeholder="0" value="0">
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function procesarSKUs() {
+      const texto = document.getElementById("skusMasivos").value;
+      const skus = texto.split(/\r?\n/).map(s => s.trim()).filter(s => s.length > 0);
+      const tbody = document.querySelector("#tablaSkus tbody");
+      tbody.innerHTML = "";
+
+      skus.forEach((sku, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td class="sku-val">${sku}</td>
+          <td class="text-center">
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById("incentivosForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const btnEnviar = document.getElementById("btnEnviar");
+      btnEnviar.disabled = true;
+      btnEnviar.innerText = "Enviando Solicitud...";
+
+      // Recopilar SKUs
+      const skus = [];
+      document.querySelectorAll("#tablaSkus .sku-val").forEach(el => {
+        skus.push(el.innerText.trim());
+      });
+
+      // Recopilar Almacenes y Metas
+      const almacenesMetas = [];
+      document.querySelectorAll("#tablaAlmacenes .meta-input").forEach(el => {
+        almacenesMetas.push({
+          numAlmacen: el.getAttribute("data-num"),
+          nombreAlmacen: el.getAttribute("data-nombre"),
+          meta: el.value || "0"
+        });
+      });
+
+      // Payload JSON completo
+      const payload = {
+        idSolicitud: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36),
+        timestamp: new Date().toISOString(),
+        nombreSolicitante: document.getElementById("nombreVendedor").value,
+        emailSolicitante: document.getElementById("email").value,
+        nombrePrograma: document.getElementById("nombrePrograma").value,
+        fechaInicio: document.getElementById("fechaInicio").value,
+        fechaFin: document.getElementById("fechaFin").value,
+        origenProveedor: document.getElementById("origenProveedor").value,
+        numProveedor: document.getElementById("numProveedor").value,
+        nombreProveedor: document.getElementById("nomProveedor").value,
+        numMarca: document.getElementById("numMarca").value,
+        nombreMarca: document.getElementById("nomMarca").value,
+        numSeccion: document.getElementById("numSeccion").value,
+        nombreSeccion: document.getElementById("nomSeccion").value,
+        nombreComprador: document.getElementById("nombreComprador").value,
+        emailComprador: document.getElementById("emailComprador").value,
+        publicoDirigido: document.getElementById("publicoDirigido").value,
+        fechaEnvioPremios: document.getElementById("fechaEnvioPremios").value || "",
+        centroCostes: document.getElementById("centroCostes").value,
+        tipoIncentivo: document.getElementById("tipoIncentivo").value,
+        valorPremios: parseFloat(document.getElementById("valorPremios").value) || 0,
+        objetivo: document.getElementById("objetivo").value,
+        mecanicaPrograma: document.getElementById("mecanica").value,
+        canalVenta: document.getElementById("canalVenta").value,
+        medicionIncentivo: document.getElementById("medicionIncentivo").value,
+        criterioDesempate: document.getElementById("criterioDesempate").value,
+        minimoVenta: parseFloat(document.getElementById("minimoVenta").value) || 0,
+        periodoCorte: document.getElementById("periodoCorte").value,
+        requisitosAdicionales: document.getElementById("requisitosAdicionales").value,
+        tipoMetaGlobal: document.getElementById("tipoMetaGlobal").value,
+        skus: skus,
+        almacenesMetas: almacenesMetas
+      };
+
+      try {
+        const response = await fetch(MAKE_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          alert("¡Solicitud enviada exitosamente!");
+          document.getElementById("incentivosForm").reset();
+          document.querySelector("#tablaSkus tbody").innerHTML = "";
+          cargarTablaAlmacenes();
+        } else {
+          alert("Error al enviar la solicitud. Código: " + response.status);
+        }
+      } catch (err) {
+        console.error("Error de envío:", err);
+        alert("Ocurrió un error al conectar con el servidor.");
+      } finally {
+        btnEnviar.disabled = false;
+        btnEnviar.innerText = "Enviar Solicitud Completa";
+      }
+    });
+  </script>
+</body>
 </html>
