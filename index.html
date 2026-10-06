@@ -400,19 +400,21 @@
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Criterio de Desempate</label>
-            <input type="text" class="form-control" id="criterioDesempate" placeholder="Ej. Mayor venta neta acumulada">
+            <select class="form-select" id="criterioDesempate">
+              <option value="Mayor Venta Neta Acumulada">Mayor Venta Neta Acumulada</option>
+              <option value="Mayor Venta Neta Acumulada">Mayor Cantidad de Unidades Vendidas</option>
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Mínimo de Venta Requerido ($MXN o Piezas)</label>
             <input type="number" class="form-control" id="minimoVenta" placeholder="0">
           </div>
           <div class="col-md-6 field-group">
-            <label class="form-label">Periodo de Corte / Avances</label>
+            <label class="form-label">Periodo de Corte</label>
             <select class="form-select" id="periodoCorte">
               <option value="Semanal">Semanal</option>
               <option value="Quincenal">Quincenal</option>
               <option value="Mensual">Mensual</option>
-              <option value="Al Final del Evento">Al Final del Evento</option>
+              <option value="Al Final del Programa">Al Final del Programa</option>
             </select>
           </div>
           <div class="col-md-6 field-group">
@@ -433,9 +435,9 @@
             <li>Todos los proveedores pueden participar.</li>
             <li>No está permitido implementar rifas en los programas de incentivos.</li>
             <li>Los programas de incentivos no son limitativos, por tal motivo pueden participar todos los vendedores de la tienda sin importar la sección del vendedor.</li>
-            <li>*Si elcolaborador está dado de baja al cálculo de resultados, ya no será considerado para la premiación.</li>
+            <li>*Si el colaborador está dado de baja al cálculo de resultados, ya no será considerado para la premiación.</li>
             <li>**Los resultados oficiales serán compartidos por el equipo de productividad.</li>
-            <li>***Considerar que se debe seguir promoviendo y vendiendo articulos de todas las marcas d ela sección.</li>
+            <li>***Considerar que se debe seguir promoviendo y vendiendo articulos de todas las marcas de la sección.</li>
           </ul>
         </div>
       </div>
