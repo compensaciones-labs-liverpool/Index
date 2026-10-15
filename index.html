@@ -646,98 +646,121 @@
       XLSX.writeFile(wb, `Plantilla_Metas_${meses}_Meses.xlsx`);
     }
 
-    // Evento Submit enviando Multipart FormData a Make
+  // Evento Submit enviando Multipart FormData a Make
     document.getElementById("incentivosForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+      e.preventDefault();
+      
+      const inputSkus = document.getElementById("excelSkus");
+      const inputAlmacenes = document.getElementById("excelAlmacenes");
 
-  // Obtener los elementos de archivo directamente del DOM
-  const inputSkus = document.getElementById("excelSkus");
-  const inputAlmacenes = document.getElementById("excelAlmacenes");
+      const fileSkus = inputSkus.files[0] || archivoSKUsCargado;
+      const fileAlmacenes = inputAlmacenes.files[0] || archivoAlmacenesCargado;
+      
+      if (!fileSkus || !fileAlmacenes) {
+        alert("Por favor sube los dos archivos de Excel requeridos (SKUs y Metas) antes de enviar.");
+        return;
+      }
+      
+      const btnEnviar = document.getElementById("btnEnviar");
+      btnEnviar.disabled = true;
+      btnEnviar.innerText = "Procesando y enviando solicitud...";
 
-  // Validar que ambos archivos hayan sido seleccionados
-  const fileSkus = inputSkus.files[0] || archivoSKUsCargado;
-  const fileAlmacenes = inputAlmacenes.files[0] || archivoAlmacenesCargado;
+      // Función auxiliar síncrona/promisificada garantizada
+      const convertirExcelACsv = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            try {
+              const data = new Uint8Array(evt.target.result);
+              const workbook = XLSX.read(data, { type: 'array' });
+              const firstSheetName = workbook.SheetNames[0];
+              const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
+              resolve(csv);
+            } catch (err) {
+              reject(err);
+            }
+          };
+          reader.onerror = (error) => reject(error);
+          reader.readAsArrayBuffer(file);
+        });
+      };
 
-  if (!fileSkus || !fileAlmacenes) {
-    alert("Por favor sube los dos archivos de Excel requeridos (SKUs y Metas de Almacenes) antes de enviar.");
-    return;
-  }
+      try {
+        // 1. Convertir los Excels a texto CSV usando Promises
+        const csvSkusTexto = await convertirExcelACsv(fileSkus);
+        const csvAlmacenesTexto = await convertirExcelACsv(fileAlmacenes);
 
-  const btnEnviar = document.getElementById("btnEnviar");
-  btnEnviar.disabled = true;
-  btnEnviar.innerText = "Transfiriendo archivos y procesando solicitud...";
+        const formData = new FormData();
 
-  const formData = new FormData();
+        // 2. Metadatos
+        formData.append("idSolicitud", crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36));
+        formData.append("timestamp", new Date().toISOString());
 
-  // 1. Metadatos del envío
-  formData.append("idSolicitud", crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36));
-  formData.append("timestamp", new Date().toISOString());
+        // 3. Textos generales del formulario
+        formData.append("nombreSolicitante", document.getElementById("nombreVendedor").value);
+        formData.append("emailSolicitante", document.getElementById("email").value);
+        formData.append("nombrePrograma", document.getElementById("nombrePrograma").value);
+        formData.append("fechaInicio", document.getElementById("fechaInicio").value);
+        formData.append("fechaFin", document.getElementById("fechaFin").value);
+        formData.append("origenProveedor", document.getElementById("origenProveedor").value);
+        formData.append("numProveedor", document.getElementById("numProveedor").value);
+        formData.append("nombreProveedor", document.getElementById("nomProveedor").value);
+        formData.append("numMarca", document.getElementById("numMarca").value);
+        formData.append("nombreMarca", document.getElementById("nomMarca").value);
+        formData.append("numSeccion", document.getElementById("numSeccion").value);
+        formData.append("nombreSeccion", document.getElementById("nomSeccion").value);
+        formData.append("nombreComprador", document.getElementById("nombreComprador").value);
+        formData.append("emailComprador", document.getElementById("emailComprador").value);
+        formData.append("tipoPrograma", document.getElementById("tipoPrograma").value);
+        formData.append("publicoDirigido", document.getElementById("publicoDirigido").value);
+        formData.append("tipoIncentivo", document.getElementById("tipoIncentivo").value);
+        formData.append("valorPremios", document.getElementById("valorPremios").value);
+        formData.append("centroCostes", document.getElementById("centroCostes").value);
+        formData.append("fechaEnvioPremios", document.getElementById("fechaEnvioPremios").value);
+        formData.append("objetivo", document.getElementById("objetivo").value);
+        formData.append("mecanica", document.getElementById("mecanica").value);
+        formData.append("tipoMetaGlobal", document.getElementById("tipoMetaGlobal").value);
+        formData.append("numMesesMeta", document.getElementById("numMesesMeta").value);
+        formData.append("canalVenta", document.getElementById("canalVenta").value);
+        formData.append("medicionIncentivo", document.getElementById("medicionIncentivo").value);
+        formData.append("criterioDesempate", document.getElementById("criterioDesempate").value);
+        formData.append("minimoVenta", document.getElementById("minimoVenta").value);
+        formData.append("periodoCorte", document.getElementById("periodoCorte").value);
+        formData.append("requisitosAdicionales", document.getElementById("requisitosAdicionales").value);
 
-  // 2. Datos de texto general (Sección 1 y 2)
-  formData.append("nombreSolicitante", document.getElementById("nombreVendedor").value);
-  formData.append("emailSolicitante", document.getElementById("email").value);
-  formData.append("nombrePrograma", document.getElementById("nombrePrograma").value);
-  formData.append("fechaInicio", document.getElementById("fechaInicio").value);
-  formData.append("fechaFin", document.getElementById("fechaFin").value);
-  formData.append("origenProveedor", document.getElementById("origenProveedor").value);
-  formData.append("numProveedor", document.getElementById("numProveedor").value);
-  formData.append("nombreProveedor", document.getElementById("nomProveedor").value);
-  formData.append("numMarca", document.getElementById("numMarca").value);
-  formData.append("nombreMarca", document.getElementById("nomMarca").value);
-  formData.append("numSeccion", document.getElementById("numSeccion").value);
-  formData.append("nombreSeccion", document.getElementById("nomSeccion").value);
-  formData.append("nombreComprador", document.getElementById("nombreComprador").value);
-  formData.append("emailComprador", document.getElementById("emailComprador").value);
+        // 4. Archivos Binarios para Google Drive
+        formData.append("fileSkus", fileSkus, fileSkus.name);
+        formData.append("fileAlmacenes", fileAlmacenes, fileAlmacenes.name);
 
-  // 3. Datos de Logística y Reglas (Secciones 3, 5 y 6)
-  formData.append("tipoPrograma", document.getElementById("tipoPrograma").value);
-  formData.append("publicoDirigido", document.getElementById("publicoDirigido").value);
-  formData.append("tipoIncentivo", document.getElementById("tipoIncentivo").value);
-  formData.append("valorPremios", document.getElementById("valorPremios").value);
-  formData.append("centroCostes", document.getElementById("centroCostes").value);
-  formData.append("fechaEnvioPremios", document.getElementById("fechaEnvioPremios").value);
-  formData.append("objetivo", document.getElementById("objetivo").value);
-  formData.append("mecanica", document.getElementById("mecanica").value);
-  formData.append("tipoMetaGlobal", document.getElementById("tipoMetaGlobal").value);
-  formData.append("numMesesMeta", document.getElementById("numMesesMeta").value);
-  formData.append("canalVenta", document.getElementById("canalVenta").value);
-  formData.append("medicionIncentivo", document.getElementById("medicionIncentivo").value);
-  formData.append("criterioDesempate", document.getElementById("criterioDesempate").value);
-  formData.append("minimoVenta", document.getElementById("minimoVenta").value);
-  formData.append("periodoCorte", document.getElementById("periodoCorte").value);
-  formData.append("requisitosAdicionales", document.getElementById("requisitosAdicionales").value);
+        // 5. Textos CSV para Parse CSV en Make
+        formData.append("csvSkus", csvSkusTexto);
+        formData.append("csvAlmacenes", csvAlmacenesTexto);
 
-  // 4. Adjuntar los archivos Excel BINARIOS al FormData
-  // Los nombres "fileSkus" y "fileAlmacenes" serán las llaves que leerá Make.com
-  formData.append("fileSkus", fileSkus, fileSkus.name);
-  formData.append("fileAlmacenes", fileAlmacenes, fileAlmacenes.name);
+        const res = await fetch(MAKE_WEBHOOK_URL, {
+          method: "POST",
+          body: formData
+        });
 
-  try {
-    const res = await fetch(MAKE_WEBHOOK_URL, {
-      method: "POST",
-      body: formData // Importante: NO incluir headers de Content-Type, el navegador lo genera automáticamente con el boundary
+        if (res.ok) {
+          alert("¡Solicitud enviada exitosamente! Los archivos fueron respaldados y procesados.");
+          document.getElementById("incentivosForm").reset();
+          document.getElementById('skuSummary').innerText = "Ningún archivo cargado";
+          document.getElementById('skuSummary').className = "badge bg-light text-dark border";
+          document.getElementById('almacenSummary').innerText = "Ningún archivo cargado";
+          document.getElementById('almacenSummary').className = "badge bg-light text-dark border";
+          archivoSKUsCargado = null;
+          archivoAlmacenesCargado = null;
+        } else {
+          alert("Hubo un error al procesar el envío en Make.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error de conversión o conexión al enviar el formulario.");
+      } finally {
+        btnEnviar.disabled = false;
+        btnEnviar.innerText = "Enviar Solicitud Completa";
+      }
     });
-
-    if (res.ok) {
-      alert("¡Solicitud enviada exitosamente! Los archivos fueron respaldados y procesados.");
-      document.getElementById("incentivosForm").reset();
-      document.getElementById('skuSummary').innerText = "Ningún archivo cargado";
-      document.getElementById('skuSummary').className = "badge bg-light text-dark border";
-      document.getElementById('almacenSummary').innerText = "Ningún archivo cargado";
-      document.getElementById('almacenSummary').className = "badge bg-light text-dark border";
-      archivoSKUsCargado = null;
-      archivoAlmacenesCargado = null;
-    } else {
-      alert("Hubo un error al procesar el envío en el servidor de Make.");
-    }
-  } catch (err) {
-    console.error(err);
-    alert("Error de conexión al enviar el formulario.");
-  } finally {
-    btnEnviar.disabled = false;
-    btnEnviar.innerText = "Enviar Solicitud Completa";
-  }
-});
   </script>
 </body>
 </html>
