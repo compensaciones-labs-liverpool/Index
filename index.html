@@ -648,87 +648,96 @@
 
     // Evento Submit enviando Multipart FormData a Make
     document.getElementById("incentivosForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      if(!archivoSKUsCargado || !archivoAlmacenesCargado) {
-        alert("Por favor sube los dos archivos de Excel requeridos (SKUs y Metas de Almacenes) antes de continuar.");
-        return;
-      }
+  // Obtener los elementos de archivo directamente del DOM
+  const inputSkus = document.getElementById("excelSkus");
+  const inputAlmacenes = document.getElementById("excelAlmacenes");
 
-      const btnEnviar = document.getElementById("btnEnviar");
-      btnEnviar.disabled = true;
-      btnEnviar.innerText = "Transfiriendo archivos y procesando solicitud...";
+  // Validar que ambos archivos hayan sido seleccionados
+  const fileSkus = inputSkus.files[0] || archivoSKUsCargado;
+  const fileAlmacenes = inputAlmacenes.files[0] || archivoAlmacenesCargado;
 
-      const formData = new FormData();
+  if (!fileSkus || !fileAlmacenes) {
+    alert("Por favor sube los dos archivos de Excel requeridos (SKUs y Metas de Almacenes) antes de enviar.");
+    return;
+  }
 
-      // Metadatos generales
-      formData.append("idSolicitud", crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36));
-      formData.append("timestamp", new Date().toISOString());
+  const btnEnviar = document.getElementById("btnEnviar");
+  btnEnviar.disabled = true;
+  btnEnviar.innerText = "Transfiriendo archivos y procesando solicitud...";
 
-      // Datos Sección 1 y 2
-      formData.append("nombreSolicitante", document.getElementById("nombreVendedor").value);
-      formData.append("emailSolicitante", document.getElementById("email").value);
-      formData.append("nombrePrograma", document.getElementById("nombrePrograma").value);
-      formData.append("fechaInicio", document.getElementById("fechaInicio").value);
-      formData.append("fechaFin", document.getElementById("fechaFin").value);
-      formData.append("origenProveedor", document.getElementById("origenProveedor").value);
-      formData.append("numProveedor", document.getElementById("numProveedor").value);
-      formData.append("nombreProveedor", document.getElementById("nomProveedor").value);
-      formData.append("numMarca", document.getElementById("numMarca").value);
-      formData.append("nombreMarca", document.getElementById("nomMarca").value);
-      formData.append("numSeccion", document.getElementById("numSeccion").value);
-      formData.append("nombreSeccion", document.getElementById("nomSeccion").value);
-      formData.append("nombreComprador", document.getElementById("nombreComprador").value);
-      formData.append("emailComprador", document.getElementById("emailComprador").value);
+  const formData = new FormData();
 
-      // Datos Sección 3, 5 (Meses) y 6
-      formData.append("tipoPrograma", document.getElementById("tipoPrograma").value);
-      formData.append("publicoDirigido", document.getElementById("publicoDirigido").value);
-      formData.append("tipoIncentivo", document.getElementById("tipoIncentivo").value);
-      formData.append("valorPremios", document.getElementById("valorPremios").value);
-      formData.append("centroCostes", document.getElementById("centroCostes").value);
-      formData.append("fechaEnvioPremios", document.getElementById("fechaEnvioPremios").value);
-      formData.append("objetivo", document.getElementById("objetivo").value);
-      formData.append("mecanica", document.getElementById("mecanica").value);
-      formData.append("tipoMetaGlobal", document.getElementById("tipoMetaGlobal").value);
-      formData.append("numMesesMeta", document.getElementById("numMesesMeta").value);
-      formData.append("canalVenta", document.getElementById("canalVenta").value);
-      formData.append("medicionIncentivo", document.getElementById("medicionIncentivo").value);
-      formData.append("criterioDesempate", document.getElementById("criterioDesempate").value);
-      formData.append("minimoVenta", document.getElementById("minimoVenta").value);
-      formData.append("periodoCorte", document.getElementById("periodoCorte").value);
-      formData.append("requisitosAdicionales", document.getElementById("requisitosAdicionales").value);
+  // 1. Metadatos del envío
+  formData.append("idSolicitud", crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36));
+  formData.append("timestamp", new Date().toISOString());
 
-      // Adjuntar archivos de Excel binarios
-      formData.append("fileSkus", archivoSKUsCargado, archivoSKUsCargado.name);
-      formData.append("fileAlmacenes", archivoAlmacenesCargado, archivoAlmacenesCargado.name);
+  // 2. Datos de texto general (Sección 1 y 2)
+  formData.append("nombreSolicitante", document.getElementById("nombreVendedor").value);
+  formData.append("emailSolicitante", document.getElementById("email").value);
+  formData.append("nombrePrograma", document.getElementById("nombrePrograma").value);
+  formData.append("fechaInicio", document.getElementById("fechaInicio").value);
+  formData.append("fechaFin", document.getElementById("fechaFin").value);
+  formData.append("origenProveedor", document.getElementById("origenProveedor").value);
+  formData.append("numProveedor", document.getElementById("numProveedor").value);
+  formData.append("nombreProveedor", document.getElementById("nomProveedor").value);
+  formData.append("numMarca", document.getElementById("numMarca").value);
+  formData.append("nombreMarca", document.getElementById("nomMarca").value);
+  formData.append("numSeccion", document.getElementById("numSeccion").value);
+  formData.append("nombreSeccion", document.getElementById("nomSeccion").value);
+  formData.append("nombreComprador", document.getElementById("nombreComprador").value);
+  formData.append("emailComprador", document.getElementById("emailComprador").value);
 
-      try {
-        const res = await fetch(MAKE_WEBHOOK_URL, {
-          method: "POST",
-          body: formData
-        });
+  // 3. Datos de Logística y Reglas (Secciones 3, 5 y 6)
+  formData.append("tipoPrograma", document.getElementById("tipoPrograma").value);
+  formData.append("publicoDirigido", document.getElementById("publicoDirigido").value);
+  formData.append("tipoIncentivo", document.getElementById("tipoIncentivo").value);
+  formData.append("valorPremios", document.getElementById("valorPremios").value);
+  formData.append("centroCostes", document.getElementById("centroCostes").value);
+  formData.append("fechaEnvioPremios", document.getElementById("fechaEnvioPremios").value);
+  formData.append("objetivo", document.getElementById("objetivo").value);
+  formData.append("mecanica", document.getElementById("mecanica").value);
+  formData.append("tipoMetaGlobal", document.getElementById("tipoMetaGlobal").value);
+  formData.append("numMesesMeta", document.getElementById("numMesesMeta").value);
+  formData.append("canalVenta", document.getElementById("canalVenta").value);
+  formData.append("medicionIncentivo", document.getElementById("medicionIncentivo").value);
+  formData.append("criterioDesempate", document.getElementById("criterioDesempate").value);
+  formData.append("minimoVenta", document.getElementById("minimoVenta").value);
+  formData.append("periodoCorte", document.getElementById("periodoCorte").value);
+  formData.append("requisitosAdicionales", document.getElementById("requisitosAdicionales").value);
 
-        if(res.ok) {
-          alert("¡Solicitud enviada exitosamente! Los archivos fueron respaldados y procesados.");
-          document.getElementById("incentivosForm").reset();
-          document.getElementById('skuSummary').innerText = "Ningún archivo cargado";
-          document.getElementById('skuSummary').className = "badge bg-light text-dark border";
-          document.getElementById('almacenSummary').innerText = "Ningún archivo cargado";
-          document.getElementById('almacenSummary').className = "badge bg-light text-dark border";
-          archivoSKUsCargado = null;
-          archivoAlmacenesCargado = null;
-        } else {
-          alert("Hubo un error al procesar el envío en el servidor.");
-        }
-      } catch(err) {
-        console.error(err);
-        alert("Error de conexión al enviar el formulario.");
-      } finally {
-        btnEnviar.disabled = false;
-        btnEnviar.innerText = "Enviar Solicitud Completa";
-      }
+  // 4. Adjuntar los archivos Excel BINARIOS al FormData
+  // Los nombres "fileSkus" y "fileAlmacenes" serán las llaves que leerá Make.com
+  formData.append("fileSkus", fileSkus, fileSkus.name);
+  formData.append("fileAlmacenes", fileAlmacenes, fileAlmacenes.name);
+
+  try {
+    const res = await fetch(MAKE_WEBHOOK_URL, {
+      method: "POST",
+      body: formData // Importante: NO incluir headers de Content-Type, el navegador lo genera automáticamente con el boundary
     });
+
+    if (res.ok) {
+      alert("¡Solicitud enviada exitosamente! Los archivos fueron respaldados y procesados.");
+      document.getElementById("incentivosForm").reset();
+      document.getElementById('skuSummary').innerText = "Ningún archivo cargado";
+      document.getElementById('skuSummary').className = "badge bg-light text-dark border";
+      document.getElementById('almacenSummary').innerText = "Ningún archivo cargado";
+      document.getElementById('almacenSummary').className = "badge bg-light text-dark border";
+      archivoSKUsCargado = null;
+      archivoAlmacenesCargado = null;
+    } else {
+      alert("Hubo un error al procesar el envío en el servidor de Make.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error de conexión al enviar el formulario.");
+  } finally {
+    btnEnviar.disabled = false;
+    btnEnviar.innerText = "Enviar Solicitud Completa";
+  }
+});
   </script>
 </body>
 </html>
