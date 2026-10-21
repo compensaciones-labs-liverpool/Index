@@ -16,7 +16,7 @@
     :root {
       --color-bg-page: #f4f4f7;
       --color-card-bg: #ffffff;
-      --color-primary: #e10098; /* Rosa Liverpool */
+      --color-primary: #e10098;
       --color-primary-hover: #b8007c;
       --color-text-main: #1d1d1f;
       --color-text-muted: #86868b;
@@ -110,7 +110,7 @@
       box-shadow: 0 0 12px rgba(225, 0, 152, 0.45);
     }
 
-    /* Click / Active: Iluminación intensa tipo Destello / Glow */
+    /* Clic / Active: Iluminación tipo Destello / Glow */
     .btn-help-circle:active, .btn-help-circle.active-glow {
       transform: scale(0.92);
       background-color: var(--color-primary);
@@ -202,7 +202,7 @@
     
     <form id="incentivosForm">
       
-      <!-- Sección 1 (Sin botón de ayuda) -->
+      <!-- Sección 1 -->
       <div class="mb-5">
         <div class="step-header">
           <h4 class="step-title">1. Datos del Solicitante y Programa</h4>
@@ -231,7 +231,7 @@
         </div>
       </div>
 
-      <!-- Sección 2 (Sin botón de ayuda) -->
+      <!-- Sección 2 -->
       <div class="mb-5">
         <div class="step-header">
           <h4 class="step-title">2. Clasificación y Comprador Responsable</h4>
@@ -239,7 +239,7 @@
         <div class="row g-3">
           <div class="col-md-4 field-group">
             <label class="form-label">Origen del Proveedor</label>
-            <select class="form-select" id="origenProveedor" name="origenProveedor">
+            <select class="form-select" id="origenProveedor" name="origenProveedor" required>
               <option value="Nacional">Nacional</option>
               <option value="Extranjero">Extranjero</option>
             </select>
@@ -279,7 +279,7 @@
         </div>
       </div>
 
-      <!-- Sección 3 (Con botón de ayuda en texto) -->
+      <!-- Sección 3 -->
       <div class="mb-5">
         <div class="step-header">
           <h4 class="step-title">3. Logística, Presupuesto y Mecánica</h4>
@@ -337,7 +337,7 @@
         </div>
       </div>
 
-      <!-- Sección 4 (Carga Excel SKUs + Botón de Ayuda con GIF) -->
+      <!-- Sección 4 -->
       <div class="mb-5">
         <div class="step-header">
           <h4 class="step-title">4. SKUs Participantes</h4>
@@ -355,11 +355,11 @@
         <div class="upload-box" id="dropZoneSkus" onclick="document.getElementById('excelSkus').click()">
           <p class="fw-semibold mb-1">Haz clic o arrastra aquí tu archivo Excel de SKUs</p>
           <p class="text-muted small mb-0">Formatos permitidos: .xlsx, .xls</p>
-          <input type="file" id="excelSkus" accept=".xlsx, .xls" style="display: none;" onchange="procesarArchivoSKUs(this.files[0])">
+          <input type="file" id="excelSkus" accept=".xlsx, .xls" style="display: none;" onchange="procesarArchivoSKUs(this.files[0])" required>
         </div>
       </div>
 
-      <!-- Sección 5 (Carga Excel Almacenes y Metas con 1-3 Meses + Botón de Ayuda con GIF) -->
+      <!-- Sección 5 -->
       <div class="mb-5">
         <div class="step-header">
           <h4 class="step-title">5. Almacenes Participantes y Metas (1 a 3 Meses)</h4>
@@ -369,14 +369,14 @@
         <div class="row g-3 mb-3">
           <div class="col-md-4">
             <label class="form-label">Tipo de Meta Global</label>
-            <select class="form-select" id="tipoMetaGlobal">
+            <select class="form-select" id="tipoMetaGlobal" required>
               <option value="Monto ($MXN)">Monto ($MXN)</option>
               <option value="Piezas (Unidades)">Piezas (Unidades)</option>
             </select>
           </div>
           <div class="col-md-4">
             <label class="form-label">Meses que Abarca la Meta</label>
-            <select class="form-select" id="numMesesMeta" onchange="actualizarModoMeses()">
+            <select class="form-select" id="numMesesMeta" onchange="actualizarModoMeses()" required>
               <option value="1">1 Mes</option>
               <option value="2">2 Meses</option>
               <option value="3" selected>3 Meses</option>
@@ -394,11 +394,11 @@
         <div class="upload-box" id="dropZoneAlmacenes" onclick="document.getElementById('excelAlmacenes').click()">
           <p class="fw-semibold mb-1">Haz clic o arrastra aquí tu archivo Excel de Almacenes y Metas</p>
           <p class="text-muted small mb-0">Formatos permitidos: .xlsx, .xls</p>
-          <input type="file" id="excelAlmacenes" accept=".xlsx, .xls" style="display: none;" onchange="procesarArchivoAlmacenes(this.files[0])">
+          <input type="file" id="excelAlmacenes" accept=".xlsx, .xls" style="display: none;" onchange="procesarArchivoAlmacenes(this.files[0])" required>
         </div>
       </div>
 
-      <!-- Sección 6 (Términos + Botón de Ayuda en Texto) -->
+      <!-- Sección 6 -->
       <div class="mb-5">
         <div class="step-header">
           <h4 class="step-title">6. Términos, Condiciones y Lineamientos</h4>
@@ -407,7 +407,7 @@
         <div class="row g-3">
           <div class="col-md-6 field-group">
             <label class="form-label">Canal de Venta</label>
-            <select class="form-select" id="canalVenta">
+            <select class="form-select" id="canalVenta" required>
               <option value="Físico">Físico</option>
               <option value="Virtual">Virtual</option>
               <option value="Ambos (Físico y Virtual)">Ambos (Físico y Virtual)</option>
@@ -415,25 +415,25 @@
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Medición del Incentivo</label>
-            <select class="form-select" id="medicionIncentivo">
+            <select class="form-select" id="medicionIncentivo" required>
               <option value="Meta de Venta Neta">Meta de Venta Neta</option>
               <option value="Por Piezas">Por Piezas</option>
             </select>
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Criterio de Desempate</label>
-            <select class="form-select" id="criterioDesempate">
+            <select class="form-select" id="criterioDesempate" required>
               <option value="Mayor Venta Neta Acumulada">Mayor Venta Neta Acumulada</option>
               <option value="Mayor Cantidad de Unidades Vendidas">Mayor Cantidad de Unidades Vendidas</option>
             </select>
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Mínimo de Venta Requerido ($MXN o Piezas)</label>
-            <input type="number" class="form-control" id="minimoVenta" placeholder="0">
+            <input type="number" class="form-control" id="minimoVenta" placeholder="0" required>
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Periodo de Corte</label>
-            <select class="form-select" id="periodoCorte">
+            <select class="form-select" id="periodoCorte" required>
               <option value="Semanal">Semanal</option>
               <option value="Quincenal">Quincenal</option>
               <option value="Mensual">Mensual</option>
@@ -442,7 +442,7 @@
           </div>
           <div class="col-md-6 field-group">
             <label class="form-label">Requisitos Adicionales</label>
-            <input type="text" class="form-control" id="requisitosAdicionales" placeholder="Ej. Asistencia 100%, Sin devoluciones">
+            <input type="text" class="form-control" id="requisitosAdicionales" placeholder="Ej. Asistencia 100%, Sin devoluciones" required>
           </div>
         </div>
 
@@ -463,7 +463,7 @@
 
   <!-- Modales de ayuda -->
   
-  <!-- Modal Ayuda Sección 3 (Texto + Botón PDF) -->
+  <!-- Modal Ayuda Sección 3 -->
   <div class="modal fade" id="modalAyudaSec3" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="border-radius: var(--radius-card);">
@@ -595,6 +595,10 @@
 
           if(!json.length || !('SKU' in json[0])) {
             alert('El archivo no tiene la columna obligatoria "SKU". Utiliza la plantilla oficial.');
+            archivoSKUsCargado = null;
+            document.getElementById('excelSkus').value = "";
+            document.getElementById('skuSummary').innerText = "Archivo inválido";
+            document.getElementById('skuSummary').className = "badge bg-danger text-white";
             return;
           }
 
@@ -621,6 +625,10 @@
 
           if(!json.length || !('No_Tienda' in json[0])) {
             alert('El archivo no cumple con el formato. Debe contener al menos la columna "No_Tienda".');
+            archivoAlmacenesCargado = null;
+            document.getElementById('excelAlmacenes').value = "";
+            document.getElementById('almacenSummary').innerText = "Archivo inválido";
+            document.getElementById('almacenSummary').className = "badge bg-danger text-white";
             return;
           }
 
@@ -658,10 +666,18 @@
       XLSX.writeFile(wb, `Plantilla_Metas_${meses}_Meses.xlsx`);
     }
 
-  // Evento Submit enviando Multipart FormData a Make
+    // Evento Submit enviando Multipart FormData a Make
     document.getElementById("incentivosForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       
+      const form = e.target;
+
+      // Validación HTML5 nativa
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
       const inputSkus = document.getElementById("excelSkus");
       const inputAlmacenes = document.getElementById("excelAlmacenes");
 
@@ -701,6 +717,10 @@
         // 1. Convertir los Excels a texto CSV usando Promises
         const csvSkusTexto = await convertirExcelACsv(fileSkus);
         const csvAlmacenesTexto = await convertirExcelACsv(fileAlmacenes);
+
+        if (!csvSkusTexto.trim() || !csvAlmacenesTexto.trim()) {
+          throw new Error("Uno o ambos archivos cargados están vacíos o no tienen formato válido.");
+        }
 
         const formData = new FormData();
 
@@ -767,7 +787,7 @@
         }
       } catch (err) {
         console.error(err);
-        alert("Error de conversión o conexión al enviar el formulario.");
+        alert("Error de conversión o conexión al enviar el formulario: " + err.message);
       } finally {
         btnEnviar.disabled = false;
         btnEnviar.innerText = "Enviar Solicitud Completa";
