@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitud de Programas de Incentivos | Liverpool</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Fonts - Google Sans / Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Fonts - Roboto / Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+  <!-- SheetJS para lectura/validación de Excel en cliente -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --color-bg-page: #f8f9fa;
+      --color-card-bg: #ffffff;
+      --color-primary: #4285F4;
+      --color-primary-hover: #1557b0;
+      --color-accent: #f8f9fa;
+      --color-text-main: #343434;
+      --color-text-muted: #5f6368;
+      --color-border: #dadce0;
+      --color-input-bg: #ffffff;
+      --radius-card: 16px;
+      --radius-input: 8px;
+    }
+
+    body { 
+      background-color: var(--color-bg-page); 
+      padding-top: 40px;
+      padding-bottom: 80px;
+      font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+      color: var(--color-text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .form-container { 
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding: 0 20px;
+    }
+
+    /* Encabezado Google Research Style */
+    .main-header {
+      margin-bottom: 40px;
+      text-align: left;
+      position: relative;
+    }
+
+    .header-logo {
+      max-height: 45px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .main-title {
+      font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 1.85rem;
+      letter-spacing: -0.02em;
+      color: var(--color-text-main);
+    }
+
+    .main-subtitle {
+      font-size: 1.05rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      max-width: 760px;
+    }
+
+    /* Notificación minimalista estilo Google Research */
+    .draft-restored-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      border: 1px solid #aecbfa;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 16px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Secciones estilo Google Card */
+    .step-section {
+      background: var(--color-card-bg);
+      border-radius: var(--radius-card);
+      padding: 36px;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 1px 3px rgba(60,64,67,0.08), 0 4px 8px rgba(60,64,67,0.04);
+      margin-bottom: 28px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .step-section:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 1px 4px rgba(26,115,232,0.25), 0 4px 12px rgba(26,115,232,0.15);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .step-title { 
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-number {
+      background-color: rgba(26, 115, 232, 0.1);
+      color: var(--color-primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    /* Inputs estilo Material Design */
+    .form-control, .form-select {
+      border-radius: var(--radius-input);
+      border: 1px solid var(--color-border);
+      background-color: var(--color-input-bg);
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      color: var(--color-text-main);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+      outline: none;
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-main);
+      margin-bottom: 6px;
+    }
+
+    /* Botón de Ayuda estilo Google Chip */
+    .btn-help-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f3f4;
+      color: var(--color-text-main);
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    
+    .btn-help-pill:hover {
+      background-color: #4285F4;
+      color: var(--color-accent);
+      border-color: #4285F4;
+    }
+    
+    .btn-help-pill svg {
+      fill: currentColor;
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Carga de Archivos Google Style */
+    .upload-box {
+      border: 2px dashed var(--color-border);
+      background-color: #f8f9fa;
+      border-radius: var(--radius-input);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .upload-box:hover {
+      border-color: var(--color-primary);
+      background-color: rgba(26, 115, 232, 0.02);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .btn-custom { 
+      background-color: var(--color-primary); 
+      color: white; 
+      font-weight: 500;
+      border-radius: 24px;
+      padding: 12px 32px;
+      border: none;
+      font-size: 0.95rem;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-custom:hover { 
+      background-color: var(--color-primary-hover); 
+      color: white; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .card-lineamientos {
+      background-color: #f8f9fa;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+      padding: 20px 24px;
+    }
+
+    .card-lineamientos li {
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .pdf-viewer-frame {
+      width: 100%;
+      height: 500px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+    }
+
+    /* Footer con Branding */
+    .form-footer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-brand-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-logo {
+      max-height: 22px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .footer-labs-tag {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    .footer-copyright {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    
+    <!-- Header Principal Google Research Style -->
+    <div class="main-header">
+      <img src="https://compensaciones-labs-liverpool.github.io/Index/assets/liverpool_typologo.svg" alt="Liverpool" class="header-logo">
+      <h1 class="main-title">Solicitud de Programa de Incentivos</h1>
+      <p class="main-subtitle">Premia y reconoce el desempeño de los colaboradores motivándolos a cumplir sus metas y destacar en su trabajo.</p>
+      
+      <!-- Banner de notificación de borrador restaurado -->
+      <div id="draftRestoredBanner" class="draft-restored-banner d-none">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </svg>
+        Se ha restaurado tu borrador guardado automáticamente.
+      </div>
+    </div>
+
+    <form id="incentivosForm">
+      
+      <!-- Sección 1 -->
+      <div class="step-section" id="sec1">
+        <div class="step-header">
+          <h4 class="step-title">
+            <span class="step-number">1</span>
+            Datos del Solicitante y Programa
+          </h4>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6 field-group">
+            <label class="form-label">Nombre del Solicitante</label>
+            <input type="text" class="form-control" id="nombreVendedor" name="nombreVendedor" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="col-12 field-group">
+            <label class="form-label">Nombre del Programa de Incentivos</label>
+            <input type="text" class="form-control" id="nombrePrograma" name="nombrePrograma" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Fecha de Inicio del Programa</label>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Fecha de Fin del Programa</label>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 2 -->
+      <div class="step-section" id="sec2">
+        <div class="step-header">
+          <h4 class="step-title">
+            <span class="step-number">2</span>
+            Clasificación y Comprador Responsable
+          </h4>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-4 field-group">
+            <label class="form-label">Origen del Proveedor</label>
+            <select class="form-select" id="origenProveedor" name="origenProveedor" required>
+              <option value="Nacional">Nacional</option>
+              <option value="Extranjero">Extranjero</option>
+            </select>
+          </div>
+          <div class="col-md-3 field-group">
+            <label class="form-label">No. Proveedor</label>
+            <input type="text" class="form-control" id="numProveedor" name="numProveedor" required>
+          </div>
+          <div class="col-md-5 field-group">
+            <label class="form-label">Nombre del Proveedor</label>
+            <input type="text" class="form-control" id="nomProveedor" name="nomProveedor" required>
+          </div>
+          <div class="col-md-3 field-group">
+            <label class="form-label">No. Marca</label>
+            <input type="text" class="form-control" id="numMarca" name="numMarca" required>
+          </div>
+          <div class="col-md-9 field-group">
+            <label class="form-label">Nombre de la Marca Participante</label>
+            <input type="text" class="form-control" id="nomMarca" name="nomMarca" required>
+          </div>
+          <div class="col-md-3 field-group">
+            <label class="form-label">No. Sección</label>
+            <input type="text" class="form-control" id="numSeccion" name="numSeccion" required>
+          </div>
+          <div class="col-md-9 field-group">
+            <label class="form-label">Nombre de la Sección</label>
+            <input type="text" class="form-control" id="nomSeccion" name="nomSeccion" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Comprador Responsable</label>
+            <input type="text" class="form-control" id="nombreComprador" name="nombreComprador" placeholder="Nombre completo" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Correo del Comprador Responsable</label>
+            <input type="email" class="form-control" id="emailComprador" name="emailComprador" placeholder="ejemplo@liverpool.com.mx" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 3 -->
+      <div class="step-section" id="sec3">
+        <div class="step-header">
+          <h4 class="step-title">
+            <span class="step-number">3</span>
+            Logística, Presupuesto y Mecánica
+          </h4>
+          <button type="button" class="btn-help-pill" onclick="abrirModalAyuda('modalAyudaSec3')">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+            Guía de ayuda
+          </button>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6 field-group">
+            <label class="form-label">Tipo de Programa</label>
+            <select class="form-select" id="tipoPrograma" name="tipoPrograma" required>
+              <option value="" disabled selected>Selecciona una opción</option>
+              <option value="Reto 100%">Reto 100%</option>
+              <option value="Top Performer">Top Performer</option>
+              <option value="Acelerador">Acelerador</option>
+              <option value="Doble Victoria">Doble Victoria</option>
+              <option value="Gran Desafío">Gran Desafío</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Público Dirigido</label>
+            <select class="form-select" id="publicoDirigido" name="publicoDirigido" required>
+              <option value="Vendedores">Vendedores</option>
+              <option value="Jefes de Departamento">Jefes de Departamento</option>
+              <option value="Ambos (Vendedores y Jefes)">Ambos (Vendedores y Jefes)</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+          <div class="col-md-4 field-group">
+            <label class="form-label">Tipo de Incentivo</label>
+            <select class="form-select" id="tipoIncentivo" name="tipoIncentivo" required>
+              <option value="Especie">Especie</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Vale Incentivo">Vale Incentivo</option>
+            </select>
+          </div>
+          <div class="col-md-4 field-group">
+            <label class="form-label">Valor Aprox. de Premios ($MXN)</label>
+            <input type="number" class="form-control" id="valorPremios" name="valorPremios" required>
+          </div>
+          <div class="col-md-4 field-group">
+            <label class="form-label">Centro de Costes <span class="text-muted font-normal ms-1">(Opcional)</span></label>
+            <input type="text" class="form-control" id="centroCostes" name="centroCostes">
+          </div>
+          <div class="col-12 field-group">
+            <label class="form-label">Objetivo del Programa</label>
+            <textarea class="form-control" id="objetivo" name="objetivo" rows="2" required></textarea>
+          </div>
+          <div class="col-12 field-group">
+            <label class="form-label">Mecánica del Programa (Descripción)</label>
+            <textarea class="form-control" id="mecanica" name="mecanica" rows="3" required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 4 -->
+      <div class="step-section" id="sec4">
+        <div class="step-header">
+          <h4 class="step-title">
+            <span class="step-number">4</span>
+            SKUs Participantes
+          </h4>
+          <button type="button" class="btn-help-pill" onclick="abrirModalAyuda('modalAyudaSec4')">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+            Guía de ayuda
+          </button>
+        </div>
+        <p class="text-muted small mb-3">Descarga la plantilla e ingresa los SKUs participantes. El sistema validará la estructura automáticamente.</p>
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <button type="button" onclick="descargarPlantillaSKUs()" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+            Descargar Plantilla SKUs (.xlsx)
+          </button>
+          <span id="skuSummary" class="badge bg-light text-dark border">Ningún archivo cargado</span>
+        </div>
+
+        <div class="upload-box" id="dropZoneSkus" onclick="document.getElementById('excelSkus').click()">
+          <svg class="mb-2" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+          </svg>
+          <p class="fw-medium mb-1">Haz clic o arrastra aquí tu archivo Excel de SKUs</p>
+          <p class="text-muted small mb-0">Formatos permitidos: .xlsx, .xls</p>
+          <input type="file" id="excelSkus" accept=".xlsx, .xls" style="display: none;" onchange="procesarArchivoSKUs(this.files[0])">
+        </div>
+      </div>
+
+      <!-- Sección 5 -->
+      <div class="step-section" id="sec5">
+        <div class="step-header">
+          <h4 class="step-title">
+            <span class="step-number">5</span>
+            Almacenes Participantes y Metas (1 a 3 Meses)
+          </h4>
+          <button type="button" class="btn-help-pill" onclick="abrirModalAyuda('modalAyudaSec5')">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+            Guía de ayuda
+          </button>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Tipo de Meta Global</label>
+            <select class="form-select" id="tipoMetaGlobal" required>
+              <option value="Monto ($MXN)">Monto ($MXN)</option>
+              <option value="Piezas (Unidades)">Piezas (Unidades)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Meses que Abarca la Meta</label>
+            <select class="form-select" id="numMesesMeta" required>
+              <option value="1">1 Mes</option>
+              <option value="2">2 Meses</option>
+              <option value="3" selected>3 Meses</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <button type="button" onclick="descargarPlantillaAlmacenes()" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+            Descargar Plantilla Metas (.xlsx)
+          </button>
+          <span id="almacenSummary" class="badge bg-light text-dark border">Ningún archivo cargado</span>
+        </div>
+
+        <div class="upload-box" id="dropZoneAlmacenes" onclick="document.getElementById('excelAlmacenes').click()">
+          <svg class="mb-2" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+          </svg>
+          <p class="fw-medium mb-1">Haz clic o arrastra aquí tu archivo Excel de Almacenes y Metas</p>
+          <p class="text-muted small mb-0">Formatos permitidos: .xlsx, .xls</p>
+          <input type="file" id="excelAlmacenes" accept=".xlsx, .xls" style="display: none;" onchange="procesarArchivoAlmacenes(this.files[0])">
+        </div>
+      </div>
+
+      <!-- Sección 6 -->
+      <div class="step-section" id="sec6">
+        <div class="step-header">
+          <h4 class="step-title">
+            <span class="step-number">6</span>
+            Términos, Condiciones y Lineamientos
+          </h4>
+          <button type="button" class="btn-help-pill" onclick="abrirModalAyuda('modalAyudaSec6')">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+            Guía de ayuda
+          </button>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6 field-group">
+            <label class="form-label">Canal de Venta</label>
+            <select class="form-select" id="canalVenta" required>
+              <option value="Físico">Físico</option>
+              <option value="Virtual">Virtual</option>
+              <option value="Ambos (Físico y Virtual)">Ambos (Físico y Virtual)</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Medición del Incentivo</label>
+            <select class="form-select" id="medicionIncentivo" required>
+              <option value="Meta de Venta Neta">Meta de Venta Neta</option>
+              <option value="Por Piezas">Por Piezas</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Criterio de Desempate</label>
+            <select class="form-select" id="criterioDesempate" required>
+              <option value="Mayor Venta Neta Acumulada">Mayor Venta Neta Acumulada</option>
+              <option value="Mayor Cantidad de Unidades Vendidas">Mayor Cantidad de Unidades Vendidas</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Mínimo de Venta Requerido ($MXN o Piezas)</label>
+            <input type="number" class="form-control" id="minimoVenta" placeholder="0" required>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Periodo de Corte</label>
+            <select class="form-select" id="periodoCorte" required>
+              <option value="Semanal">Semanal</option>
+              <option value="Quincenal">Quincenal</option>
+              <option value="Mensual">Mensual</option>
+              <option value="Al Final del Programa">Al Final del Programa</option>
+            </select>
+          </div>
+          <div class="col-md-6 field-group">
+            <label class="form-label">Requisitos Adicionales</label>
+            <input type="text" class="form-control" id="requisitosAdicionales" placeholder="Ej. Asistencia 100%, Sin devoluciones" required>
+          </div>
+        </div>
+
+        <div class="card-lineamientos mt-4">
+          <h6 class="fw-bold mb-3">Lineamientos Oficiales del Programa:</h6>
+          <ul class="list-unstyled mb-0">
+            <li>• Los ganadores deben ser empleados activos a la fecha de entrega de los premios.</li>
+            <li>• En incentivos económicos vía nómina, no participa personal externo.</li>
+            <li>• En incentivos en especie, el proveedor es responsable del envío de los premios a las tiendas ganadoras.</li>
+            <li>• No está permitido implementar rifas en los programas de incentivos.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer del Formulario con Branding -->
+      <div class="form-footer-bar">
+        <div class="footer-brand">
+          <div class="footer-brand-title">
+            <img src="https://compensaciones-labs-liverpool.github.io/Index/assets/liverpool_typologo.svg" alt="Liverpool Logo" class="footer-logo">
+            <span class="footer-labs-tag"></span>
+          </div>
+          <span class="footer-copyright">Copyright © 2027 El Puerto de Liverpool. All rights reserved.</span>
+        </div>
+        
+        <button type="submit" id="btnEnviar" class="btn btn-custom">
+          Enviar solicitud
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modales de ayuda -->
+  
+  <!-- Modal Ayuda Sección 3 -->
+  <div class="modal fade" id="modalAyudaSec3" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius: var(--radius-card);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="fw-bold">Catálogo de Esquemas de Programas</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-3">
+          <p class="small text-muted mb-2">Consulta el PDF interactivo con los lineamientos completos de logística y presupuesto:</p>
+          <iframe 
+            src="https://compensaciones-labs-liverpool.github.io/Index/assets/catalogo_esquema_programas.pdf" 
+            class="pdf-viewer-frame"
+            title="Catálogo de Esquemas de Programas">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Ayuda Sección 4 -->
+  <div class="modal fade" id="modalAyudaSec4" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: var(--radius-card);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="fw-bold">¿Cómo cargar el Excel de SKUs?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img src="https://compensaciones-labs-liverpool.github.io/Index/assets/tutorial_skus.gif" alt="Tutorial SKUs" class="img-fluid rounded mb-3 border shadow-sm" style="max-height: 200px;">
+          <p class="small text-muted text-start mb-0">
+            1. Haz clic en <strong>Descargar Plantilla Oficial de SKUs</strong>.<br>
+            2. Completa la columna <code>SKU</code> con los números a 8 dígitos.<br>
+            3. Arrastra el archivo a la zona delimitada. El sistema validará que los códigos sean numéricos antes de enviar.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ayuda Sección 5 -->
+  <div class="modal fade" id="modalAyudaSec5" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: var(--radius-card);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="fw-bold">Carga de Metas por Almacén (1, 2 o 3 Meses)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img src="https://compensaciones-labs-liverpool.github.io/Index/assets/tutorial_metas.gif" alt="Tutorial Metas" class="img-fluid rounded mb-3 border shadow-sm" style="max-height: 200px;">
+          <p class="small text-muted text-start mb-0">
+            • Selecciona el número de meses (1, 2 o 3) que dura el programa.<br>
+            • La plantilla descargable adaptará las columnas automáticamente (<code>Meta_Mes_1</code>, <code>Meta_Mes_2</code>, <code>Meta_Mes_3</code>).<br>
+            • Si una tienda no participa en un mes determinado, escribe <code>0</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ayuda Sección 6 -->
+  <div class="modal fade" id="modalAyudaSec6" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: var(--radius-card);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="fw-bold">Explicación de Términos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small text-muted">
+          <p><strong>• Canal de Venta:</strong> Especifica si la venta contabilización solo en piso de venta (Físico), vía Liverpool.com.mx / App (Virtual) o combinados.</p>
+          <p><strong>• Criterio de Desempate:</strong> Define la regla objetiva en caso de que dos o más colaboradores alcancen exactamente la misma cifra final.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Lógica Javascript -->
+  <script>
+    const MAKE_WEBHOOK_URL = "https://hook.us2.make.com/9i8toum62wetrwz9x298ttstqdqvax00";
+    const DRAFT_KEY = "liverpool_form_draft_v3";
+
+    let archivoSKUsCargado = null;
+    let archivoAlmacenesCargado = null;
+
+    // Helper para modales de ayuda
+    function abrirModalAyuda(modalId) {
+      const myModal = new bootstrap.Modal(document.getElementById(modalId));
+      myModal.show();
+    }
+
+    // Auto-guardado silencioso
+    function guardarBorrador() {
+      const datos = {};
+      const inputs = document.querySelectorAll('#incentivosForm input:not([type="file"]), #incentivosForm select, #incentivosForm textarea');
+      
+      inputs.forEach(input => {
+        if (input.id) {
+          datos[input.id] = input.value;
+        }
+      });
+
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(datos));
+    }
+
+    // Cargar borrador al abrir/actualizar
+    function cargarBorrador() {
+      const datosGuardados = localStorage.getItem(DRAFT_KEY);
+      if (datosGuardados) {
+        try {
+          const datos = JSON.parse(datosGuardados);
+          let camposRestaurados = 0;
+          
+          Object.keys(datos).forEach(id => {
+            const input = document.getElementById(id);
+            if (input && datos[id] !== undefined && datos[id].trim() !== "") {
+              input.value = datos[id];
+              camposRestaurados++;
+            }
+          });
+
+          // Si había información guardada, muestra la notificación minimalista estilo Google
+          if (camposRestaurados > 0) {
+            const banner = document.getElementById('draftRestoredBanner');
+            if (banner) {
+              banner.classList.remove('d-none');
+              setTimeout(() => {
+                banner.style.opacity = '0';
+                banner.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => banner.classList.add('d-none'), 500);
+              }, 4000);
+            }
+          }
+        } catch(e) {
+          console.error("Error al cargar el borrador", e);
+        }
+      }
+    }
+
+    // Drag & Drop Handling
+    ['dropZoneSkus', 'dropZoneAlmacenes'].forEach(id => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      ['dragenter', 'dragover'].forEach(eName => {
+        el.addEventListener(eName, (e) => { e.preventDefault(); el.classList.add('dragover'); });
+      });
+      ['dragleave', 'drop'].forEach(eName => {
+        el.addEventListener(eName, (e) => { e.preventDefault(); el.classList.remove('dragover'); });
+      });
+    });
+
+    document.getElementById('dropZoneSkus').addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if(files.length) procesarArchivoSKUs(files[0]);
+    });
+
+    document.getElementById('dropZoneAlmacenes').addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if(files.length) procesarArchivoAlmacenes(files[0]);
+    });
+
+    // Validar y procesar Excel de SKUs en cliente
+    function procesarArchivoSKUs(file) {
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, {type: 'array'});
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(sheet);
+
+          if(!json.length || !('SKU' in json[0])) {
+            alert('El archivo no tiene la columna obligatoria "SKU". Utiliza la plantilla oficial.');
+            archivoSKUsCargado = null;
+            document.getElementById('excelSkus').value = "";
+            document.getElementById('skuSummary').innerText = "Archivo inválido";
+            document.getElementById('skuSummary').className = "badge bg-danger text-white";
+            return;
+          }
+
+          archivoSKUsCargado = file;
+          document.getElementById('skuSummary').innerText = `${json.length} SKUs detectados (${file.name})`;
+          document.getElementById('skuSummary').className = "badge bg-success text-white";
+        } catch(err) {
+          alert('Error al leer el archivo Excel.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Validar y procesar Excel de Almacenes/Metas
+    function procesarArchivoAlmacenes(file) {
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, {type: 'array'});
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(sheet);
+
+          if(!json.length || !('No_Tienda' in json[0])) {
+            alert('El archivo no cumple con el formato. Debe contener al menos la columna "No_Tienda".');
+            archivoAlmacenesCargado = null;
+            document.getElementById('excelAlmacenes').value = "";
+            document.getElementById('almacenSummary').innerText = "Archivo inválido";
+            document.getElementById('almacenSummary').className = "badge bg-danger text-white";
+            return;
+          }
+
+          archivoAlmacenesCargado = file;
+          document.getElementById('almacenSummary').innerText = `${json.length} Almacenes registrados (${file.name})`;
+          document.getElementById('almacenSummary').className = "badge bg-success text-white";
+        } catch(err) {
+          alert('Error al leer el archivo de Almacenes.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Generar Plantilla Dinámica de SKUs
+    function descargarPlantillaSKUs() {
+      const ws = XLSX.utils.json_to_sheet([
+        { SKU: "12345678", Descripcion_Opcional: "Producto Ejemplo A" },
+        { SKU: "87654321", Descripcion_Opcional: "Producto Ejemplo B" }
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "SKUs");
+      XLSX.writeFile(wb, "Plantilla_Oficial_SKUs.xlsx");
+    }
+
+    // Generar Plantilla Dinámica de Metas de 1 a 3 Meses
+    function descargarPlantillaAlmacenes() {
+      const meses = parseInt(document.getElementById('numMesesMeta').value);
+      let ejemplo = { No_Tienda: "0001", Nombre_Almacen: "Liverpool Centro", Meta_Mes_1: 150000 };
+      if(meses >= 2) ejemplo.Meta_Mes_2 = 180000;
+      if(meses === 3) ejemplo.Meta_Mes_3 = 200000;
+
+      const ws = XLSX.utils.json_to_sheet([ejemplo]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Metas");
+      XLSX.writeFile(wb, `Plantilla_Metas_${meses}_Meses.xlsx`);
+    }
+
+    // Inicializar eventos al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarBorrador();
+
+      const inputs = document.querySelectorAll('#incentivosForm input:not([type="file"]), #incentivosForm select, #incentivosForm textarea');
+      inputs.forEach(input => {
+        input.addEventListener('input', guardarBorrador);
+        input.addEventListener('change', guardarBorrador);
+      });
+    });
+
+    // Evento Submit enviando Multipart FormData a Make
+    document.getElementById("incentivosForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const form = e.target;
+
+      // Validación HTML5 nativa
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const inputSkus = document.getElementById("excelSkus");
+      const inputAlmacenes = document.getElementById("excelAlmacenes");
+
+      const fileSkus = inputSkus.files[0] || archivoSKUsCargado;
+      const fileAlmacenes = inputAlmacenes.files[0] || archivoAlmacenesCargado;
+      
+      if (!fileSkus || !fileAlmacenes) {
+        alert("Por favor sube los dos archivos de Excel requeridos (SKUs y Metas) antes de enviar.");
+        return;
+      }
+      
+      const btnEnviar = document.getElementById("btnEnviar");
+      btnEnviar.disabled = true;
+      btnEnviar.innerText = "Procesando y enviando solicitud...";
+
+      try {
+        const formData = new FormData();
+
+        // Metadatos
+        formData.append("idSolicitud", crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36));
+        formData.append("timestamp", new Date().toISOString());
+
+        // Textos generales del formulario
+        formData.append("nombreSolicitante", document.getElementById("nombreVendedor").value);
+        formData.append("emailSolicitante", document.getElementById("email").value);
+        formData.append("nombrePrograma", document.getElementById("nombrePrograma").value);
+        formData.append("fechaInicio", document.getElementById("fechaInicio").value);
+        formData.append("fechaFin", document.getElementById("fechaFin").value);
+        formData.append("origenProveedor", document.getElementById("origenProveedor").value);
+        formData.append("numProveedor", document.getElementById("numProveedor").value);
+        formData.append("nombreProveedor", document.getElementById("nomProveedor").value);
+        formData.append("numMarca", document.getElementById("numMarca").value);
+        formData.append("nombreMarca", document.getElementById("nomMarca").value);
+        formData.append("numSeccion", document.getElementById("numSeccion").value);
+        formData.append("nombreSeccion", document.getElementById("nomSeccion").value);
+        formData.append("nombreComprador", document.getElementById("nombreComprador").value);
+        formData.append("emailComprador", document.getElementById("emailComprador").value);
+        formData.append("tipoPrograma", document.getElementById("tipoPrograma").value);
+        formData.append("publicoDirigido", document.getElementById("publicoDirigido").value);
+        formData.append("tipoIncentivo", document.getElementById("tipoIncentivo").value);
+        formData.append("valorPremios", document.getElementById("valorPremios").value);
+        formData.append("centroCostes", document.getElementById("centroCostes").value);
+        formData.append("objetivo", document.getElementById("objetivo").value);
+        formData.append("mecanica", document.getElementById("mecanica").value);
+        formData.append("tipoMetaGlobal", document.getElementById("tipoMetaGlobal").value);
+        formData.append("numMesesMeta", document.getElementById("numMesesMeta").value);
+        formData.append("canalVenta", document.getElementById("canalVenta").value);
+        formData.append("medicionIncentivo", document.getElementById("medicionIncentivo").value);
+        formData.append("criterioDesempate", document.getElementById("criterioDesempate").value);
+        formData.append("minimoVenta", document.getElementById("minimoVenta").value);
+        formData.append("periodoCorte", document.getElementById("periodoCorte").value);
+        formData.append("requisitosAdicionales", document.getElementById("requisitosAdicionales").value);
+
+        // Archivos binarios (.xlsx)
+        formData.append("fileSkus", fileSkus, fileSkus.name);
+        formData.append("fileAlmacenes", fileAlmacenes, fileAlmacenes.name);
+
+        const res = await fetch(MAKE_WEBHOOK_URL, {
+          method: "POST",
+          body: formData
+        });
+
+        if (res.ok) {
+          alert("¡Solicitud enviada exitosamente!");
+          localStorage.removeItem(DRAFT_KEY);
+          document.getElementById("incentivosForm").reset();
+          document.getElementById('skuSummary').innerText = "Ningún archivo cargado";
+          document.getElementById('skuSummary').className = "badge bg-light text-dark border";
+          document.getElementById('almacenSummary').innerText = "Ningún archivo cargado";
+          document.getElementById('almacenSummary').className = "badge bg-light text-dark border";
+          archivoSKUsCargado = null;
+          archivoAlmacenesCargado = null;
+        } else {
+          alert("Hubo un error al procesar el envío en Make.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error al enviar el formulario: " + err.message);
+      } finally {
+        btnEnviar.disabled = false;
+        btnEnviar.innerText = "Enviar Solicitud Completa";
+      }
+    });
+  </script>
+</body>
+</html>
